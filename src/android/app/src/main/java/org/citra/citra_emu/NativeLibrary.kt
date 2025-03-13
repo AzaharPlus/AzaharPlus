@@ -700,6 +700,8 @@ object NativeLibrary {
         NetPlayManager.clearChat()
     }
 
+    external fun initMultiplayer()
+
     @Keep
     @JvmStatic
     fun createFile(directory: String, filename: String): Boolean =
