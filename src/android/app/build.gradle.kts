@@ -60,10 +60,8 @@ android {
     }
 
     defaultConfig {
-        // The application ID refers to Lime3DS to allow for
-        // the Play Store listing, which was originally set up for Lime3DS, to still be used.
-        applicationId = "io.github.lime3ds.android"
-
+        //New app id so it can coexist with Azahar
+        applicationId = "io.github.azaharplus.android"
         minSdk = 28
         targetSdk = 35
         versionCode = autoVersion
