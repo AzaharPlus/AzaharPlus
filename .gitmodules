@@ -106,6 +106,9 @@
 [submodule "externals/libretro-common"]
 	path = externals/libretro-common/libretro-common
 	url = https://github.com/libretro/libretro-common.git
+[submodule "dllwalker"]
+	path = externals/dllwalker
+	url = https://github.com/azahar-emu/dllwalker
 [submodule "externals/libzip"]
 	path = externals/libzip
 	url = https://github.com/nih-at/libzip.git
