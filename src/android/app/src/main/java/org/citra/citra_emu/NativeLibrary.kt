@@ -21,6 +21,7 @@ import android.view.Surface
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.Keep
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
@@ -323,6 +324,12 @@ object NativeLibrary {
                 canContinue = false
             }
 
+            CoreError.ErrorCoreExceptionRaised -> {
+                title = emulationActivity.getString(R.string.fatal_error)
+                message = emulationActivity.getString(R.string.fatal_error_message)
+                canContinue = false
+            }
+
             CoreError.ErrorUnknown -> {
                 title = emulationActivity.getString(R.string.fatal_error)
                 message = emulationActivity.getString(R.string.fatal_error_message)
@@ -445,7 +452,7 @@ object NativeLibrary {
             return
         }
 
-        if (resultCode == EmulationErrorDialogFragment.ShutdownRequested) {
+        if (resultCode == CoreError.ShutdownRequested.value) {
             emulationActivity.finish()
             return
         }
@@ -464,23 +471,26 @@ object NativeLibrary {
         override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
             emulationActivity = requireActivity() as EmulationActivity
 
-            var captionId = R.string.loader_error_invalid_format
             val result = requireArguments().getInt(RESULT_CODE)
-            if (result == ErrorLoader_ErrorEncrypted) {
-                captionId = R.string.loader_error_encrypted
+            var captionString = getString(R.string.loader_error_invalid_format)
+            if (result == CoreError.ErrorLoader_ErrorEncrypted.value) {
+                captionString = getString(R.string.loader_error_encrypted)
             }
-            if (result == ErrorArticDisconnected) {
-                captionId = R.string.artic_base
+            if (result == CoreError.ErrorArticDisconnected.value) {
+                captionString = getString(R.string.artic_base)
             }
 
             val alert = MaterialAlertDialogBuilder(requireContext())
-                .setTitle(captionId)
+                .setTitle(captionString)
                 .setMessage(
                     Html.fromHtml(
-                        if (result == ErrorArticDisconnected)
-                            CitraApplication.appContext.resources.getString(R.string.artic_server_comm_error)
+                        if (result == CoreError.ErrorArticDisconnected.value)
+                            getString(R.string.artic_server_comm_error)
+                        else if (result == CoreError.ErrorLoader_ErrorEncrypted.value)
+                            getString(R.string.loader_error_encrypted_desc)
                         else
-                            CitraApplication.appContext.resources.getString(R.string.redump_games),
+                            getString(R.string.loader_error_generic,
+                                getString(CoreError.fromInt(result).stringRes), result),
                     Html.FROM_HTML_MODE_LEGACY
                     )
                 )
@@ -501,21 +511,6 @@ object NativeLibrary {
             const val TAG = "EmulationErrorDialogFragment"
 
             const val RESULT_CODE = "resultcode"
-
-            const val Success = 0
-            const val ErrorNotInitialized = 1
-            const val ErrorGetLoader = 2
-            const val ErrorSystemMode = 3
-            const val ErrorLoader = 4
-            const val ErrorLoader_ErrorEncrypted = 5
-            const val ErrorLoader_ErrorInvalidFormat = 6
-            const val ErrorLoader_ErrorGBATitle = 7
-            const val ErrorSystemFiles = 8
-            const val ErrorSavestate = 9
-            const val ErrorArticDisconnected = 10
-            const val ErrorN3DSApplication = 11
-            const val ShutdownRequested = 12
-            const val ErrorUnknown = 13
 
             fun newInstance(resultCode: Int): EmulationErrorDialogFragment {
                 val args = Bundle()
@@ -863,12 +858,29 @@ object NativeLibrary {
             FileUtil.deleteDocument(path)
         }
 
-    enum class CoreError {
-        ErrorSystemFiles,
-        ErrorSavestate,
-        ErrorArticDisconnected,
-        ErrorN3DSApplication,
-        ErrorUnknown
+    enum class CoreError(val value: Int, @StringRes val stringRes: Int) {
+        Success(0, R.string.core_error_success),
+        ErrorNotInitialized(1, R.string.core_error_not_initialized),
+        ErrorGetLoader(2, R.string.core_error_get_loader),
+        ErrorSystemMode(3, R.string.core_error_system_mode),
+        ErrorLoader(4, R.string.core_error_loader),
+        ErrorLoader_ErrorEncrypted(5, R.string.core_error_loader_encrypted),
+        ErrorLoader_ErrorInvalidFormat(6, R.string.core_error_loader_invalid_format),
+        ErrorLoader_ErrorGBATitle(7, R.string.core_error_loader_gba_title),
+        ErrorSystemFiles(8, R.string.core_error_system_files),
+        ErrorSavestate(9, R.string.core_error_savestate),
+        ErrorArticDisconnected(10, R.string.core_error_artic_disconnected),
+        ErrorN3DSApplication(11, R.string.core_error_n3ds_application),
+        ErrorCoreExceptionRaised(12, R.string.core_error_core_exception_raised),
+        ErrorMemoryExceptionRaised(13, R.string.core_error_memory_exception_raised),
+        ShutdownRequested(14, R.string.core_error_shutdown_requested),
+        ErrorUnknown(15, R.string.core_error_unknown);
+
+        companion object {
+            fun fromInt(value: Int): CoreError {
+                return entries.find { it.value == value } ?: ErrorUnknown
+            }
+        }
     }
 
     enum class InstallStatus {
