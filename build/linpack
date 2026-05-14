@@ -4,6 +4,9 @@ cp ../dist/org.azahar_emu.Azahar.xml ./AppDir/
 cp ../dist/azahar.png ./AppDir/
 chmod 777 ../externals/Anylinux-AppImages/useful-tools/quick-sharun.sh
 
+export DEPLOY_OPENGL=1
+export DEPLOY_VULKAN=1
+
 ../externals/Anylinux-AppImages/useful-tools/quick-sharun.sh ./bin/Release/azahar
 
 ../externals/Anylinux-AppImages/useful-tools/quick-sharun.sh --make-appimage
