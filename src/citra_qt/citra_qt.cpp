@@ -1161,6 +1161,7 @@ void GMainWindow::ConnectMenuEvents() {
     connect_menu(ui->action_FAQ, []() {
         QDesktopServices::openUrl(QUrl(QStringLiteral("https://azahar-emu.org/pages/faq/")));
     });
+    connect_menu(ui->action_libzip, &GMainWindow::OnMenuLibzipLicence);
     connect_menu(ui->action_About, &GMainWindow::OnMenuAboutCitra, QAction::AboutRole);
 }
 
@@ -4013,6 +4014,41 @@ void GMainWindow::OnCoreError(Core::System::ResultStatus result, std::string det
         message_label->setText(status_message);
         message_label_used_for_movie = false;
     }
+}
+
+void GMainWindow::OnMenuLibzipLicence() {
+    QMessageBox::information(this, tr("libzip licence"), tr(
+"Copyright (C) 1999-2020 Dieter Baron and Thomas Klausner\n\
+\n\
+The authors can be contacted at <info@libzip.org>\n\
+\n\
+Redistribution and use in source and binary forms, with or without\n\
+modification, are permitted provided that the following conditions\n\
+are met:\n\
+\n\
+1. Redistributions of source code must retain the above copyright\n\
+  notice, this list of conditions and the following disclaimer.\n\
+\n\
+2. Redistributions in binary form must reproduce the above copyright\n\
+  notice, this list of conditions and the following disclaimer in\n\
+  the documentation and/or other materials provided with the\n\
+  distribution.\n\
+\n\
+3. The names of the authors may not be used to endorse or promote\n\
+  products derived from this software without specific prior\n\
+  written permission.\n\
+\n\
+THIS SOFTWARE IS PROVIDED BY THE AUTHORS ``AS IS'' AND ANY EXPRESS\n\
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED\n\
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE\n\
+ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY\n\
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n\
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE\n\
+GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS\n\
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER\n\
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR\n\
+OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN\n\
+IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."));
 }
 
 void GMainWindow::OnMenuAboutCitra() {

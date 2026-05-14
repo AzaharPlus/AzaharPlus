@@ -247,6 +247,7 @@
     <addaction name="separator"/>
     <addaction name="action_Open_Log_Folder"/>
     <addaction name="action_FAQ"/>
+    <addaction name="action_libzip"/>
     <addaction name="action_About"/>
    </widget>
    <addaction name="menu_File"/>
@@ -396,6 +397,11 @@
   <action name="action_FAQ">
    <property name="text">
     <string>FAQ</string>
+   </property>
+  </action>
+  <action name="action_libzip">
+   <property name="text">
+    <string>libzip licence</string>
    </property>
   </action>
   <action name="action_About">
