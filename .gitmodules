@@ -109,3 +109,6 @@
 [submodule "externals/libzip"]
 	path = externals/libzip
 	url = https://github.com/nih-at/libzip.git
+[submodule "externals/Anylinux-AppImages"]
+	path = externals/Anylinux-AppImages
+	url = https://github.com/pkgforge-dev/Anylinux-AppImages.git

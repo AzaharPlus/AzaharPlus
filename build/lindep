@@ -1,3 +1,3 @@
 sudo apt install build-essential clang clang-format cmake jackd libasound-dev libgl-dev libpipewire-0.3-dev libsndio-dev \
   libssl-dev libsdl2-dev libx11-dev libxext-dev qt6-base-dev qt6-base-private-dev qt6-l10n-tools qt6-multimedia-dev \
-  qt6-tools-dev qt6-tools-dev-tools xorg-dev ninja-build
+  qt6-tools-dev qt6-tools-dev-tools xorg-dev ninja-build xvfb

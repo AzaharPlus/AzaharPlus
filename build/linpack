@@ -1,7 +1,11 @@
-export EXTRA_QT_PLUGINS="waylandcompositor"
-export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so"
+mkdir -p ./AppDir
+cp ../dist/azahar.desktop ./AppDir/
+cp ../dist/org.azahar_emu.Azahar.xml ./AppDir/
+cp ../dist/azahar.png ./AppDir/
+chmod 777 ../externals/Anylinux-AppImages/useful-tools/quick-sharun.sh
 
-ninja bundle
-cp ../the_azahar_logo_is_the_property_of_PabloMK7_and_angyartanddraw.txt ./bundle/the_azahar_logo_is_the_property_of_PabloMK7_and_angyartanddraw.txt
-cp ../externals/libzip/LICENSE ./bundle/libzip_license.txt
-mv ./bundle ./azaharplus-VERSION-linux
+../externals/Anylinux-AppImages/useful-tools/quick-sharun.sh ./bin/Release/azahar
+
+../externals/Anylinux-AppImages/useful-tools/quick-sharun.sh --make-appimage
+
+mv AzaharPlus-UNKNOWN-anylinux-x86_64.AppImage azaharplus-VERSION-linux.AppImage
