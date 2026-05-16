@@ -4,6 +4,7 @@
 #include "common/common_paths.h"
 #include "core/hle/service/cecd/cecd.h"
 #include <zip.h>
+#include "core/hle/kernel/shared_page.h"
 
 namespace Core {
 
@@ -195,6 +196,26 @@ int importZipPass(std::string path)
 			
 			continue;
 		}
+		
+		auto initTime = SharedPage::GetInitTime(0);
+		std::chrono::system_clock::time_point tp(initTime);
+		std::time_t time = std::chrono::system_clock::to_time_t(tp);
+		std::tm tm = *std::localtime(&time);
+		
+		LOG_ERROR(HW, "timestamp {} / {} / {} - {} : {} : {}",
+			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
+		
+		messHead->send_time.year=tm.tm_year + 1900;
+        messHead->send_time.month=tm.tm_mon + 1;
+        messHead->send_time.day=tm.tm_mday;
+        messHead->send_time.hour=tm.tm_hour;
+        messHead->send_time.minute=tm.tm_min;
+        messHead->send_time.second=tm.tm_sec;
+        messHead->send_time.millisecond=1;
+        messHead->send_time.microsecond=1;
+        messHead->send_time.padding=1;
+		
+		messHead->recv_time = messHead->send_time;
 		
 		FileUtil::IOFile dfile(path, "wb");
 	

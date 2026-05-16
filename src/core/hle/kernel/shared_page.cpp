@@ -31,7 +31,7 @@ template void load_construct_data<iarchive>(iarchive& ar, SharedPage::Handler* t
 
 namespace SharedPage {
 
-static std::chrono::seconds GetInitTime(u64 override_init_time) {
+std::chrono::seconds GetInitTime(u64 override_init_time) {
     if (override_init_time != 0) {
         // Override the clock init time with the one in the movie
         return std::chrono::seconds(override_init_time);
