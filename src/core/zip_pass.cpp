@@ -5,6 +5,7 @@
 #include "core/hle/service/cecd/cecd.h"
 #include <zip.h>
 #include "core/hle/kernel/shared_page.h"
+#include <cryptopp/osrng.h>
 
 namespace Core {
 
@@ -140,7 +141,6 @@ int importZipPass(std::string path)
 			continue;
 		}
 		
-		std::string path = inboxPath + DIR_SEP + filename;
 		std::string boxInfoPath = inboxPath + DIR_SEP + "BoxInfo_____";
 		
 		if (!FileUtil::Exists(boxInfoPath))
@@ -216,6 +216,12 @@ int importZipPass(std::string path)
         messHead->send_time.padding=1;
 		
 		messHead->recv_time = messHead->send_time;
+		
+		CryptoPP::AutoSeededRandomPool rng;
+		rng.GenerateBlock(messHead->message_id.data(), messHead->message_id.size());
+		filename = "_" + Service::CECD::Module::EncodeBase64(messHead->message_id);
+		
+		std::string path = inboxPath + DIR_SEP + filename;
 		
 		FileUtil::IOFile dfile(path, "wb");
 	
