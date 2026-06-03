@@ -460,7 +460,7 @@ class MainActivity : AppCompatActivity(), ThemeProvider {
         }
 
         runCatching {
-            NativeLibrary.deleteDocument(nativePath)
+            NativeLibrary.deleteDocument("!$nativePath")
         }
 
         val ret = NativeLibrary.exportZipPass(nativePath)

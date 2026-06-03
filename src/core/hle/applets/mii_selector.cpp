@@ -99,7 +99,7 @@ MiiResult MiiSelector::GetStandardMiiResult() {
     mii_data.mac = {0x40, 0xF4, 0x07, 0xB7, 0x37, 0x10};
     mii_data.pad = 0x0000;
     mii_data.mii_details.raw = 0xA600;
-    mii_data.mii_name = {'C', 'i', 't', 'r', 'a', 0x0, 0x0, 0x0, 0x0, 0x0};
+    mii_data.mii_name = {'A', 'z', 'a', 'h', 'a', 'r', 'P', 'l', 'u', 's'};
     mii_data.height = 0x40;
     mii_data.width = 0x40;
     mii_data.face_style.raw = 0x00;

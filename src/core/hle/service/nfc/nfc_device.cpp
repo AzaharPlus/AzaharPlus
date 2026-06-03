@@ -52,36 +52,142 @@ NfcDevice::NfcDevice(Core::System& system_) : system{system_} {
 
 NfcDevice::~NfcDevice() = default;
 
+static std::array<u8, 8> hexToBin(const std::string& hex) {
+    std::array<u8, 8> bytes;
+
+    for (unsigned int i = 0; i < hex.length(); i += 2) {
+        std::string byteString = hex.substr(i, 2);
+        bytes[i/2] = static_cast<u8>(std::strtol(byteString.c_str(), nullptr, 16));
+    }
+	
+    return bytes;
+}
+
+static EncryptedNTAG215File getAmiibo(std::string id)
+{
+	EncryptedNTAG215File genFile = {};
+	
+	const unsigned char amiibo_header[17] = {
+		0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
+		0xff, 0x48, 0x0f, 0xe0, 0xf1, 0x10, 0xff, 0xee, 
+		0xa5
+	};
+	
+	const unsigned char amiibo_footer[9] = {
+		0x01, 0x00, 0x0F, 0xBD, 0x00, 0x00, 0x00, 0x04, 
+		0x5F
+	};
+
+	unsigned char *pGenFile = (unsigned char*)(&genFile);
+	
+	memcpy(pGenFile, amiibo_header, sizeof(amiibo_header));
+	memcpy(pGenFile + 84, hexToBin(id.substr(1)).data(), 8);
+	memcpy(pGenFile + 520, amiibo_footer, sizeof(amiibo_footer));
+	
+	CryptoPP::AutoSeededRandomPool rng;
+	rng.GenerateBlock((unsigned char*)&genFile.uuid, sizeof(genFile.uuid));
+	
+	genFile.uuid.uid[3] = 0x88 ^ genFile.uuid.uid[0] ^ genFile.uuid.uid[1] ^ genFile.uuid.uid[2];
+	genFile.uuid.lock_bytes[0] = genFile.uuid.uid[4] ^ genFile.uuid.uid[5] ^ genFile.uuid.uid[6] ^ genFile.uuid.nintendo_id;
+	
+    genFile.user_memory.owner_mii = HLE::Applets::MiiSelector::GetStandardMiiResult().selected_mii_data;
+	genFile.user_memory.settings.settings.amiibo_initialized.Assign(1);
+	
+	genFile.user_memory.settings.write_date.SetYear(static_cast<u16>(2005));
+	genFile.user_memory.settings.write_date.SetMonth(static_cast<u8>(11));
+	genFile.user_memory.settings.write_date.SetDay(static_cast<u8>(5));
+	
+    genFile.user_memory.settings.init_date.SetYear(static_cast<u16>(2005));
+    genFile.user_memory.settings.init_date.SetMonth(static_cast<u8>(11));
+    genFile.user_memory.settings.init_date.SetDay(static_cast<u8>(5));
+	
+	auto amiibo_name = Common::UTF8ToUTF16("+Amiibo+");		   
+	for (int i = 0; i < amiibo_name.length(); i++) {
+        genFile.user_memory.settings.amiibo_name[i] = static_cast<u16_be>(amiibo_name[i]);
+    }
+	
+	NTAG215File tmpFile = AmiiboCrypto::NfcDataToEncodedData(genFile);
+	AmiiboCrypto::EncodeAmiibo(tmpFile, genFile);
+		
+	return genFile;
+}
+
+bool makeAmiiboFile(std::string id, std::string filePath)
+{
+	bool res = true;
+	EncryptedNTAG215File genFile = getAmiibo(id);
+
+	FileUtil::Delete(filePath);
+	FileUtil::IOFile amiibo_file(filePath, "wb");
+	
+	if (res && !amiibo_file.IsOpen()) {
+		LOG_ERROR(Service_NFC, "Could not open amiibo file \"{}\"", filePath);
+		res = false;
+	}
+
+	if (res && !amiibo_file.WriteBytes(&genFile, sizeof(EncryptedNTAG215File))) {
+		LOG_ERROR(Service_NFC, "Could not write to amiibo file \"{}\"", filePath);
+		res = false;
+	}
+
+	amiibo_file.Close();
+	
+	if(!res) {
+		FileUtil::Delete(filePath);
+	}
+	
+	return res;
+}
+
 bool NfcDevice::LoadAmiibo(std::string filename) {
-    FileUtil::IOFile amiibo_file(filename, "rb");
+	bool isGenerated = false;
+	EncryptedNTAG215File genFile = {};
+	static EncryptedNTAG215File previousFile = {};
+	
+	LOG_ERROR(Service_NFC, "LoadAmiibo = {}", filename);
+	
+	if(filename == "@previous")
+	{
+		LOG_ERROR(Service_NFC, "previous amiibo");
+		is_write_protected = true;
+		memcpy(&tag.raw, &previousFile, sizeof(EncryptedNTAG215File));
+	}
+	else if(filename.length() == 17 && filename[0] == '@')	// generate from id
+	{
+		genFile = getAmiibo(filename);
+		is_write_protected = true;
+		isGenerated = true;
+	}
+	else
+	{
+		FileUtil::IOFile amiibo_file(filename, "rb");
 
-    if (!is_initalized) {
-        LOG_ERROR(Service_NFC, "Not initialized");
-        return false;
-    }
+		if (!is_initalized) {
+			LOG_ERROR(Service_NFC, "Not initialized");
+			return false;
+		}
 
-    if (device_state != DeviceState::SearchingForTag) {
-        LOG_ERROR(Service_NFC, "Application is not looking for amiibos, current state {}",
-                  device_state);
-        return false;
-    }
+		if (device_state != DeviceState::SearchingForTag) {
+			LOG_ERROR(Service_NFC, "Application is not looking for amiibos, current state {}",
+					  device_state);
+			return false;
+		}
 
-    if (!amiibo_file.IsOpen()) {
-        LOG_ERROR(Service_NFC, "Could not open amiibo file \"{}\"", filename);
-        return false;
-    }
+		if (!amiibo_file.IsOpen()) {
+			LOG_ERROR(Service_NFC, "Could not open amiibo file \"{}\"", filename);
+			return false;
+		}
 
-    if (!amiibo_file.ReadBytes(&tag.file, sizeof(tag.file))) {
-        LOG_ERROR(Service_NFC, "Could not read amiibo data from file \"{}\"", filename);
-        tag.file = {};
-        return false;
-    }
+		if (!amiibo_file.ReadBytes(&tag.file, sizeof(tag.file))) {
+			LOG_ERROR(Service_NFC, "Could not read amiibo data from file \"{}\"", filename);
+			tag.file = {};
+			return false;
+		}		
 
-    // TODO: Filter by allowed_protocols here
-    is_plain_amiibo = AmiiboCrypto::IsAmiiboValid(tag.file);
-    is_write_protected = false;
-
-    amiibo_filename = filename;
+		is_write_protected = false;
+	}
+	
+	amiibo_filename = filename;
     device_state = DeviceState::TagFound;
     is_tag_in_range = true;
     tag_out_of_range_event->Clear();
@@ -89,27 +195,29 @@ bool NfcDevice::LoadAmiibo(std::string filename) {
 
     RescheduleTagRemoveEvent();
 
-    // Fallback for plain amiibos
-    if (is_plain_amiibo) {
-        LOG_INFO(Service_NFC, "Using plain amiibo");
-        encrypted_tag.file = AmiiboCrypto::EncodedDataToNfcData(tag.file);
-        return true;
-    }
-
-    // Fallback for encrypted amiibos without keys
-    if (!HW::AES::NfcSecretsAvailable()) {
-        LOG_INFO(Service_NFC, "Loading amiibo without keys");
-        memcpy(&encrypted_tag.raw, &tag.raw, sizeof(EncryptedNTAG215File));
-        tag.file = {};
-        BuildAmiiboWithoutKeys();
-        is_plain_amiibo = true;
-        is_write_protected = true;
+	if (isGenerated) {
+        LOG_INFO(Service_NFC, "Using generated amiibo");
+		encrypted_tag.file = genFile;
+		previousFile = encrypted_tag.file;
+		
+		tag.file = {};
+		
         return true;
     }
 
     LOG_INFO(Service_NFC, "Loading amiibo with keys");
-    memcpy(&encrypted_tag.raw, &tag.raw, sizeof(EncryptedNTAG215File));
-    tag.file = {};
+	if(AmiiboCrypto::IsAmiiboValid(tag.file))
+	{
+		LOG_INFO(Service_NFC, "Raw NTAG215 amiibo file");
+		encrypted_tag.file = AmiiboCrypto::EncodedDataToNfcData(tag.file);
+	}
+	else
+	{
+		memcpy(&encrypted_tag.raw, &tag.raw, sizeof(EncryptedNTAG215File));
+	}
+	
+	tag.file = {};
+
     return true;
 }
 
@@ -286,17 +394,15 @@ Result NfcDevice::Flush() {
         return ResultSuccess;
     }
 
-    if (!is_plain_amiibo) {
-        if (!AmiiboCrypto::EncodeAmiibo(tag.file, encrypted_tag.file)) {
-            LOG_ERROR(Service_NFC, "Failed to encode data");
-            return ResultOperationFailed;
-        }
+	if (!AmiiboCrypto::EncodeAmiibo(tag.file, encrypted_tag.file)) {
+		LOG_ERROR(Service_NFC, "Failed to encode data");
+		return ResultOperationFailed;
+	}
 
-        if (amiibo_filename.empty()) {
-            LOG_ERROR(Service_NFC, "Tried to use UpdateStoredAmiiboData on a nonexistant file.");
-            return ResultOperationFailed;
-        }
-    }
+	if (amiibo_filename.empty()) {
+		LOG_ERROR(Service_NFC, "Tried to use UpdateStoredAmiiboData on a nonexistant file.");
+		return ResultOperationFailed;
+	}
 
     FileUtil::IOFile amiibo_file(amiibo_filename, "wb");
     bool write_failed = false;
@@ -305,18 +411,13 @@ Result NfcDevice::Flush() {
         LOG_ERROR(Service_NFC, "Could not open amiibo file \"{}\"", amiibo_filename);
         write_failed = true;
     }
-    if (!is_plain_amiibo) {
-        if (!write_failed &&
-            !amiibo_file.WriteBytes(&encrypted_tag.file, sizeof(EncryptedNTAG215File))) {
-            LOG_ERROR(Service_NFC, "Could not write to amiibo file \"{}\"", amiibo_filename);
-            write_failed = true;
-        }
-    } else {
-        if (!write_failed && !amiibo_file.WriteBytes(&tag.file, sizeof(EncryptedNTAG215File))) {
-            LOG_ERROR(Service_NFC, "Could not write to amiibo file \"{}\"", amiibo_filename);
-            write_failed = true;
-        }
-    }
+
+	if (!write_failed &&
+		!amiibo_file.WriteBytes(&encrypted_tag.file, sizeof(EncryptedNTAG215File))) {
+		LOG_ERROR(Service_NFC, "Could not write to amiibo file \"{}\"", amiibo_filename);
+		write_failed = true;
+	}
+
     amiibo_file.Close();
 
     if (write_failed) {
@@ -341,12 +442,6 @@ Result NfcDevice::Mount() {
     if (!AmiiboCrypto::IsAmiiboValid(encrypted_tag.file)) {
         LOG_ERROR(Service_NFC, "Not an amiibo");
         return ResultNotSupported;
-    }
-
-    // The loaded amiibo is not encrypted
-    if (is_plain_amiibo) {
-        device_state = DeviceState::TagMounted;
-        return ResultSuccess;
     }
 
     if (!AmiiboCrypto::DecodeAmiibo(encrypted_tag.file, tag.file)) {
@@ -386,12 +481,6 @@ Result NfcDevice::PartiallyMount() {
     if (!AmiiboCrypto::IsAmiiboValid(encrypted_tag.file)) {
         LOG_ERROR(Service_NFC, "Not an amiibo");
         return ResultNotSupported;
-    }
-
-    // The loaded amiibo is not encrypted
-    if (is_plain_amiibo) {
-        device_state = DeviceState::TagPartiallyMounted;
-        return ResultSuccess;
     }
 
     if (!AmiiboCrypto::DecodeAmiibo(encrypted_tag.file, tag.file)) {
@@ -531,20 +620,23 @@ Result NfcDevice::GetRegisterInfo(RegisterInfo& register_info) const {
         return connection_result;
     }
 
-    if (tag.file.settings.settings.amiibo_initialized == 0) {
-        return ResultNeedRegister;
+    if (tag.file.settings.settings.amiibo_initialized == 0)
+	{
+        register_info = {};
     }
+	else
+	{
+		const auto& settings = tag.file.settings;
 
-    const auto& settings = tag.file.settings;
-
-    // TODO: Validate this data
-    register_info = {
-        .mii_data = tag.file.owner_mii,
-        .amiibo_name = settings.amiibo_name,
-        .flags = static_cast<u8>(settings.settings.raw & 0xf),
-        .font_region = settings.country_code_id,
-        .creation_date = settings.init_date.GetWriteDate(),
-    };
+		// TODO: Validate this data
+		register_info = {
+			.mii_data = tag.file.owner_mii,
+			.amiibo_name = settings.amiibo_name,
+			.flags = static_cast<u8>(settings.settings.raw & 0xf),
+			.font_region = settings.country_code_id,
+			.creation_date = settings.init_date.GetWriteDate(),
+		};
+	}
 
     return ResultSuccess;
 }

@@ -59,6 +59,8 @@ enum class AmiiboType : u8 {
     Figure,
     Card,
     Yarn,
+	Band,
+	Block,
 };
 
 enum class AmiiboSeries : u8 {
@@ -85,6 +87,17 @@ enum class AmiiboSeries : u8 {
     Others,
     MegaMan,
     Diablo,
+	PowerPros,
+	MonsterHunterRise,
+	YuGiOh,
+	DonkeyKong,
+	XenobladeChronicles3,
+	MyMarioWoodenBlocks,
+	StreetFighter6,
+	KirbyAirRiders,
+	Unknown31,
+	Unknown32,
+	Pragmata,
 };
 
 enum class TagType : u32 {

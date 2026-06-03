@@ -286,6 +286,18 @@ bool DecodeAmiibo(const EncryptedNTAG215File& encrypted_tag_data, NTAG215File& t
 
     // Decrypt
     Cipher(data_keys, encoded_data, tag_data);
+	
+	if((u8)tag_data.model_info.amiibo_type > 4)
+	{
+		LOG_DEBUG(Service_NFC, "Unexpected amiibo_type {}", (u8)tag_data.model_info.amiibo_type);
+		
+		if((u8)encoded_data.model_info.amiibo_type <= 4)
+		{
+			LOG_DEBUG(Service_NFC, "Unencrypted amiibo data");
+			
+			tag_data = encoded_data;
+		}
+	}
 
     // Regenerate tag HMAC. Note: order matters, data HMAC depends on tag HMAC!
     constexpr std::size_t input_length = DYNAMIC_LOCK_START - UUID_START;
@@ -302,12 +314,12 @@ bool DecodeAmiibo(const EncryptedNTAG215File& encrypted_tag_data, NTAG215File& t
 
     if (tag_data.hmac_data != encrypted_tag_data.user_memory.hmac_data) {
         LOG_ERROR(Service_NFC, "hmac_data doesn't match");
-        return false;
+    //    return false;
     }
 
     if (tag_data.hmac_tag != encrypted_tag_data.user_memory.hmac_tag) {
         LOG_ERROR(Service_NFC, "hmac_tag doesn't match");
-        return false;
+    //    return false;
     }
 
     return true;

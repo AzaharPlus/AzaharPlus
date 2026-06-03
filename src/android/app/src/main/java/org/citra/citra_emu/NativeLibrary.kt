@@ -633,9 +633,13 @@ object NativeLibrary {
     // Notifies that the activity is now in foreground and camera devices can now be reloaded
     external fun reloadCameraDevices()
 
+    external fun makeAmiibo(id: String?, filepath: String?): Boolean
+
     external fun loadAmiibo(path: String?): Boolean
 
     external fun removeAmiibo()
+
+    external fun getProgramId(): String
 
     const val SAVESTATE_SLOT_COUNT = 11
     const val QUICKSAVE_SLOT = 0

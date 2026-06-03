@@ -54,6 +54,7 @@
 #include "jni/camera/ndk_camera.h"
 #include "jni/camera/still_image_camera.h"
 #include "jni/config.h"
+#include "core/loader/ncch.h"
 
 #ifdef ENABLE_OPENGL
 #include "jni/emu_window/emu_window_gl.h"
@@ -994,6 +995,17 @@ void Java_org_citra_citra_1emu_NativeLibrary_reloadCameraDevices([[maybe_unused]
     if (g_ndk_factory) {
         g_ndk_factory->ReloadCameraDevices();
     }
+}
+
+jstring Java_org_citra_citra_1emu_NativeLibrary_getProgramId([[maybe_unused]] JNIEnv* env,
+                                                             [[maybe_unused]] jobject obj) {
+    return ToJString(env, Loader::getProgramId());
+}
+
+jboolean Java_org_citra_citra_1emu_NativeLibrary_makeAmiibo(JNIEnv* env,
+                                                            [[maybe_unused]] jobject obj,
+                                                            jstring id, jstring filepath) {
+    return Service::NFC::makeAmiiboFile(GetJString(env, id), GetJString(env, filepath));
 }
 
 jboolean Java_org_citra_citra_1emu_NativeLibrary_loadAmiibo(JNIEnv* env,

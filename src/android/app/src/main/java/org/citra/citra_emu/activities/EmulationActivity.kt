@@ -6,6 +6,7 @@ package org.citra.citra_emu.activities
 
 import android.Manifest.permission
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
@@ -18,6 +19,7 @@ import android.view.MotionEvent
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +51,7 @@ import org.citra.citra_emu.utils.ControllerMappingHelper
 import org.citra.citra_emu.utils.FileBrowserHelper
 import org.citra.citra_emu.utils.EmulationLifecycleUtil
 import org.citra.citra_emu.utils.EmulationMenuSettings
+import org.citra.citra_emu.utils.FileUtil
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.utils.RefreshRateUtil
 import org.citra.citra_emu.utils.ThemeUtil
@@ -567,6 +570,51 @@ class EmulationActivity : AppCompatActivity() {
             )
         }
         return true
+    }
+
+    class SaveBinContract : ActivityResultContract<String, Intent?>() {
+        override fun createIntent(context: Context, input: String): Intent {
+            return Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .setType("application/octet-stream")
+                .putExtra(Intent.EXTRA_TITLE, input)
+        }
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Intent? = intent
+    }
+
+    var amiiboId = ""
+
+    val amiiboSaver = registerForActivityResult(
+        SaveBinContract()
+    ) { result: Intent? ->
+        if (result == null) {
+            return@registerForActivityResult
+        }
+
+        val uri = result.data ?: return@registerForActivityResult
+
+        android.util.Log.e("Amiibo", "Save file $uri")
+
+        FileUtil.deleteDocument(uri.toString())
+        var nativePath = "!" + NativeLibrary.getNativePath(uri)
+
+        if(!nativePath.endsWith(".bin")){
+            nativePath = "$nativePath.bin"
+        }
+
+        runCatching {
+            NativeLibrary.deleteDocument(nativePath)
+        }
+
+        val ret = NativeLibrary.makeAmiibo(amiiboId, nativePath)
+
+        if(ret){
+            Toast.makeText(applicationContext, "Amiibo File Success", Toast.LENGTH_LONG)
+                .show()
+        }else{
+            Toast.makeText(applicationContext, "Amiibo File Failure", Toast.LENGTH_LONG)
+                .show()
+        }
     }
 
     val openAmiiboFileLauncher =
