@@ -2,7 +2,7 @@
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
-#include <json/json.hpp>
+#include <json.hpp>
 #include <algorithm>
 #include <cmath>
 #include <fstream>
