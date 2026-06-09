@@ -397,6 +397,11 @@ class EmulationFragment : Fragment(), SurfaceHolder.Callback, Choreographer.Fram
                     true
                 }
 
+                R.id.menu_multiplayer -> {
+                    emulationActivity.displayMultiplayerDialog()
+                    true
+                }
+
                 R.id.menu_exit -> {
                     emulationState.pause()
                     MaterialAlertDialogBuilder(requireContext())

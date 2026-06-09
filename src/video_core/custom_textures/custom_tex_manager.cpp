@@ -290,7 +290,7 @@ void CustomTexManager::DumpTexture(const SurfaceParams& params, u32 level, std::
 Material* CustomTexManager::GetMaterial(u64 data_hash) {
     const auto it = material_map.find(data_hash);
     if (it == material_map.end()) {
-        LOG_WARNING(Render, "Unable to find replacement for surface with hash {:016X}", data_hash);
+//        LOG_WARNING(Render, "Unable to find replacement for surface with hash {:016X}", data_hash);
         return nullptr;
     }
     return it->second.get();

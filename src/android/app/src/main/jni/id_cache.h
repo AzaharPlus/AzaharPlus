@@ -31,6 +31,8 @@ jmethodID GetPortraitScreenLayout();
 jmethodID GetExitEmulationActivity();
 jmethodID GetRequestCameraPermission();
 jmethodID GetRequestMicPermission();
+jmethodID GetAddNetPlayMessage();
+jmethodID ClearChat();
 
 jclass GetCheatClass();
 jfieldID GetCheatPointer();

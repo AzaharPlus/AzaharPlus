@@ -571,7 +571,7 @@ void Room::RoomImpl::HandleModGetBanListPacket(const ENetEvent* event) {
 bool Room::RoomImpl::IsValidNickname(const std::string& nickname) const {
     // A nickname is valid if it matches the regex and is not already taken by anybody else in the
     // room.
-    const std::regex nickname_regex("^[ a-zA-Z0-9._-]{4,20}$");
+    const std::regex nickname_regex("^[ a-zA-Z0-9._-]{3,20}$");
     if (!std::regex_match(nickname, nickname_regex))
         return false;
 
