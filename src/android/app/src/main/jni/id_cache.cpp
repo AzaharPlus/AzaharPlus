@@ -2,7 +2,7 @@
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
-#include "common/android_storage.h"
+#include "common/android_utils.h"
 #include "common/common_paths.h"
 #include "common/logging/backend.h"
 #include "common/logging/filter.h"
@@ -85,10 +85,6 @@ jclass GetNativeLibraryClass() {
 
 jmethodID GetOnCoreError() {
     return s_on_core_error;
-}
-
-jmethodID GetIsPortraitMode() {
-    return s_is_portrait_mode;
 }
 
 jmethodID GetLandscapeScreenLayout() {
@@ -192,7 +188,6 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     s_on_core_error = env->GetStaticMethodID(
         s_native_library_class, "onCoreError",
         "(Lorg/citra/citra_emu/NativeLibrary$CoreError;Ljava/lang/String;)Z");
-    s_is_portrait_mode = env->GetStaticMethodID(s_native_library_class, "isPortraitMode", "()Z");
     s_exit_emulation_activity =
         env->GetStaticMethodID(s_native_library_class, "exitEmulationActivity", "(I)V");
     s_request_camera_permission =
@@ -279,7 +274,7 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
     MiiSelector::InitJNI(env);
     SoftwareKeyboard::InitJNI(env);
     Camera::StillImage::InitJNI(env);
-    AndroidStorage::InitJNI(env, s_native_library_class);
+    AndroidUtils::InitJNI(env, s_native_library_class);
 
     return JNI_VERSION;
 }
@@ -309,7 +304,7 @@ void JNI_OnUnload(JavaVM* vm, void* reserved) {
     MiiSelector::CleanupJNI(env);
     SoftwareKeyboard::CleanupJNI(env);
     Camera::StillImage::CleanupJNI(env);
-    AndroidStorage::CleanupJNI();
+    AndroidUtils::CleanupJNI();
 }
 
 #ifdef __cplusplus
