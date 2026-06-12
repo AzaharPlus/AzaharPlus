@@ -6,6 +6,7 @@
 #include <zip.h>
 #include "core/hle/kernel/shared_page.h"
 #include <cryptopp/osrng.h>
+#include "core/system_titles.h"
 
 namespace Core {
 
@@ -80,6 +81,30 @@ int exportZipPass(std::string path)
 int importZipPass(std::string path)
 {
 	LOG_ERROR(Frontend, "importZipPass {}", path);
+	
+	int nHomes = 0;
+	
+	for (u32 region = 0; region < Core::NUM_SYSTEM_TITLE_REGIONS; region++) {
+		if(region == 3) continue;
+		const auto path = Core::GetHomeMenuNcchPath(region);
+	
+		if(!path.empty() && FileUtil::Exists(path))
+		{
+			nHomes++;
+		}
+	}
+
+	if(nHomes < 1) {
+		LOG_ERROR(Frontend, "importZipPass impossible without system files");
+		return -2;
+	}
+	
+	LOG_ERROR(Frontend, "nHomes {}", nHomes);
+	
+	if(!Settings::values.enable_required_online_lle_modules.GetValue()) {
+		LOG_ERROR(Frontend, "importZipPass impossible without LLE modules");
+		return -3;
+	}
 	
 	int ret = 0;
 	int err = 0;

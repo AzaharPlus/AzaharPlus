@@ -4409,6 +4409,18 @@ void GMainWindow::OnImportZipPass() {
 	for (const QString& fileName: fileNames){
 		int res = Core::importZipPass(fileName.toStdString());
 		
+		if(res < -1) {
+			if(res == -2) {
+				QMessageBox::critical(this, tr("Import ZipPass Data"), tr("ZipPass requires System Files installed"));
+			} else if(res == -3) {
+				QMessageBox::critical(this, tr("Import ZipPass Data"), tr("ZipPass requires LLE modules enabled"));
+			} else {
+				QMessageBox::critical(this, tr("Import ZipPass Data"), tr("Unknown ZipPass error"));
+			}
+			
+			return;
+		}
+		
 		if(res > 0) ret++;
         if(res < 0) err++;
 	}

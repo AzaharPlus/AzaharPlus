@@ -509,6 +509,15 @@ class MainActivity : AppCompatActivity(), ThemeProvider {
             val nativePath = NativeLibrary.getNativePath(file.toUri())
             val res = NativeLibrary.importZipPass(nativePath)
 
+            if(res < -1){
+                when (res){
+                    -2 -> Toast.makeText(applicationContext, "Missing System Files", Toast.LENGTH_LONG).show()
+                    -3 -> Toast.makeText(applicationContext, "Missing LLE Modules", Toast.LENGTH_LONG).show()
+                    else -> Toast.makeText(applicationContext, "ZipPass Unknown Error", Toast.LENGTH_LONG).show()
+                }
+                return@registerForActivityResult
+            }
+
             if(res > 0) ret++
             if(res < 0) err++
         }
