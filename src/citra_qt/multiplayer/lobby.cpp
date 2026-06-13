@@ -67,6 +67,7 @@ Lobby::Lobby(Core::System& system_, QWidget* parent, QStandardItemModel* list,
     connect(ui->games_owned, &QCheckBox::toggled, proxy, &LobbyFilterProxyModel::SetFilterOwned);
     connect(ui->hide_empty, &QCheckBox::toggled, proxy, &LobbyFilterProxyModel::SetFilterEmpty);
     connect(ui->hide_full, &QCheckBox::toggled, proxy, &LobbyFilterProxyModel::SetFilterFull);
+    connect(ui->hide_locked, &QCheckBox::toggled, proxy, &LobbyFilterProxyModel::SetFilterLocked);
     connect(ui->room_list, &QTreeView::doubleClicked, this, &Lobby::OnJoinRoom);
     connect(ui->room_list, &QTreeView::clicked, this, &Lobby::OnExpandRoom);
 
@@ -314,6 +315,14 @@ bool LobbyFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex& s
             return false;
         }
     }
+	
+	if (filter_locked) {
+        QModelIndex password_index = sourceModel()->index(sourceRow, Column::ROOM_NAME);
+		bool has_password = sourceModel()->data(password_index, LobbyItemName::PasswordRole).toBool();
+        if (has_password) {
+            return false;
+        }
+    }
 
     // filter by search parameters
     if (!filter_search.isEmpty()) {
@@ -380,6 +389,11 @@ void LobbyFilterProxyModel::SetFilterEmpty(bool filter) {
 
 void LobbyFilterProxyModel::SetFilterFull(bool filter) {
     filter_full = filter;
+    invalidate();
+}
+
+void LobbyFilterProxyModel::SetFilterLocked(bool filter) {
+    filter_locked = filter;
     invalidate();
 }
 

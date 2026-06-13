@@ -105,6 +105,38 @@ class HomeSettingsFragment : Fragment() {
                 }
             ),
             HomeSetting(
+                R.string.multiplayer,
+                R.string.multiplayer_description,
+                R.drawable.ic_multiplayer,
+                { mainActivity.displayMultiplayerDialog() }
+            ),
+            HomeSetting(
+                R.string.install_game_content,
+                R.string.install_game_content_description,
+                R.drawable.ic_install,
+                { mainActivity.ciaFileInstaller.launch(true) }
+            ),
+            HomeSetting(
+                R.string.system_files_download,
+                R.string.system_files_description,
+                R.drawable.ic_system_update,
+                {
+                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                    parentFragmentManager.primaryNavigationFragment?.findNavController()
+                        ?.navigate(R.id.action_homeSettingsFragment_to_systemFilesDownloadFragment)
+                }
+            ),
+            HomeSetting(
+                R.string.setup_system_files,
+                R.string.setup_system_files_description,
+                R.drawable.ic_system_update,
+                {
+                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
+                    parentFragmentManager.primaryNavigationFragment?.findNavController()
+                        ?.navigate(R.id.action_homeSettingsFragment_to_systemFilesFragment)
+                }
+            ),
+            HomeSetting(
                 R.string.artic_base_connect,
                 R.string.artic_base_connect_description,
                 R.drawable.ic_network,
@@ -140,38 +172,6 @@ class HomeSettingsFragment : Fragment() {
                             .setNegativeButton(android.R.string.cancel) {_, _ -> }
                             .show()
                     }
-                }
-            ),
-            HomeSetting(
-                R.string.multiplayer,
-                R.string.multiplayer_description,
-                R.drawable.ic_multiplayer,
-                { mainActivity.displayMultiplayerDialog() }
-            ),
-            HomeSetting(
-                R.string.install_game_content,
-                R.string.install_game_content_description,
-                R.drawable.ic_install,
-                { mainActivity.ciaFileInstaller.launch(true) }
-            ),
-            HomeSetting(
-                R.string.system_files_download,
-                R.string.system_files_description,
-                R.drawable.ic_system_update,
-                {
-                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                    parentFragmentManager.primaryNavigationFragment?.findNavController()
-                        ?.navigate(R.id.action_homeSettingsFragment_to_systemFilesDownloadFragment)
-                }
-            ),
-            HomeSetting(
-                R.string.setup_system_files,
-                R.string.setup_system_files_description,
-                R.drawable.ic_system_update,
-                {
-                    exitTransition = MaterialSharedAxis(MaterialSharedAxis.X, true)
-                    parentFragmentManager.primaryNavigationFragment?.findNavController()
-                        ?.navigate(R.id.action_homeSettingsFragment_to_systemFilesFragment)
                 }
             ),
             HomeSetting(

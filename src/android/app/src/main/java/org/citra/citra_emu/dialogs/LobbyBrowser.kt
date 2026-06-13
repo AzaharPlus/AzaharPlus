@@ -25,7 +25,6 @@ import info.debatty.java.stringsimilarity.JaroWinkler
 import org.citra.citra_emu.R
 import org.citra.citra_emu.databinding.DialogLobbyBrowserBinding
 import org.citra.citra_emu.databinding.ItemLobbyRoomBinding
-import org.citra.citra_emu.utils.CompatUtils
 import org.citra.citra_emu.utils.NetPlayManager
 import java.util.Locale
 
@@ -53,6 +52,10 @@ class LobbyBrowser(context: Context) : BottomSheetDialog(context) {
         setupRefreshButton()
         refreshRoomList()
         setupSearchBar()
+
+        setOnDismissListener {
+            NetPlayDialog(context).show()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -74,7 +77,9 @@ class LobbyBrowser(context: Context) : BottomSheetDialog(context) {
     }
 
     private fun setupSearchBar() {
-        binding.chipGroup.setOnCheckedStateChangeListener { _, _ -> adapter.filterAndSearch() }
+        binding.checkEmpty.setOnClickListener { _ -> adapter.filterAndSearch() }
+        binding.checkFull.setOnClickListener { _ -> adapter.filterAndSearch() }
+        binding.checkLocked.setOnClickListener { _ -> adapter.filterAndSearch() }
 
 
         binding.searchText.doOnTextChanged { text: CharSequence?, _: Int, _: Int, _: Int ->
@@ -135,7 +140,6 @@ class LobbyBrowser(context: Context) : BottomSheetDialog(context) {
             handler.post {
                 if (result == 0) {
                     dismiss()
-                    NetPlayDialog(context).show()
                 }
             }
         }.start()
@@ -191,32 +195,20 @@ class LobbyBrowser(context: Context) : BottomSheetDialog(context) {
         }
 
         fun filterAndSearch() {
-            if (binding.searchText.text.toString().isEmpty() &&
-                binding.chipGroup.checkedChipId == View.NO_ID
-            ) {
-                adapter.updateRooms(NetPlayManager.getPublicRooms())
-                return
-            }
-
             val baseList = NetPlayManager.getPublicRooms()
-            val filteredList: List<NetPlayManager.RoomInfo> =
-                when (binding.chipGroup.checkedChipId) {
-                    R.id.chip_hide_full -> {
-                        baseList.filter { it.members.size < it.maxPlayers }
-                    }
+            var filteredList: List<NetPlayManager.RoomInfo> = baseList
 
-                    R.id.chip_hide_empty -> {
-                        baseList.filter {
-                            it.members.isNotEmpty()
-                        }
-                    }
-
-                    else -> baseList
-                }
-
-            if (binding.searchText.text.toString().isEmpty() &&
-                binding.chipGroup.checkedChipId != View.NO_ID
-            ) {
+            if(binding.checkEmpty.isChecked){
+                filteredList = filteredList.filter { it.members.isNotEmpty() }
+            }
+            if(binding.checkFull.isChecked){
+                filteredList = filteredList.filter { it.members.size < it.maxPlayers }
+            }
+            if(binding.checkLocked.isChecked){
+                filteredList = filteredList.filter { !it.hasPassword }
+            }
+            
+            if (binding.searchText.text.toString().isEmpty()) {
                 adapter.updateRooms(filteredList)
                 return
             }

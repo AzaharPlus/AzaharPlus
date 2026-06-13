@@ -1092,14 +1092,14 @@
     <string name="multiplayer_no_preferred_game">None</string>
     <string name="multiplayer_prefered_game_name_invalid">You must choose a Preferred Application to host a room.</string>
     <string name="multiplayer_default_room_name">%1$s\'s Room</string>
-    <string name="multiplayer_wifi_direct_searching">Searching for peers…</string>
-    <string name="multiplayer_wifi_direct_connecting">Connecting to %1$s…</string>
-    <string name="multiplayer_wifi_direct_setting_up_host">Setting up room…</string>
-    <string name="multiplayer_wifi_direct_setting_up_client">Joining room…</string>
+    <string name="multiplayer_wifi_direct_searching">[ %1$s ]   Searching for peers…</string>
+    <string name="multiplayer_wifi_direct_connecting">[ %1$s ]   Connecting to %2$s…</string>
+    <string name="multiplayer_wifi_direct_setting_up_host">[ %1$s ]   Setting up room…</string>
+    <string name="multiplayer_wifi_direct_setting_up_client">[ %1$s ]   Joining room…</string>
     <string name="multiplayer_wifi_direct_error">Wi-Fi Direct connection failed</string>
     <string name="multiplayer_wifi_direct_not_supported">Wi-Fi Direct is not supported on this device</string>
     <string name="multiplayer_wifi_direct_permission_needed">Wi-Fi permission required. Please grant it and try again.</string>
-    <string name="multiplayer_wifi_direct_select_peer">Select a device to connect</string>
+    <string name="multiplayer_wifi_direct_select_peer">[ %1$s ]   Select a device to connect</string>
 
     <!-- File Compression -->
     <string name="compress">Compress</string>

@@ -4,7 +4,10 @@
 
 package org.citra.citra_emu.dialogs
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Handler
@@ -15,8 +18,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import android.net.wifi.p2p.WifiP2pDevice
+import android.net.wifi.p2p.WifiP2pManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.RECEIVER_NOT_EXPORTED
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -55,10 +61,23 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
             activeWifiDirectManager?.stop()
             activeWifiDirectManager = null
         }
+
+        var thisDeviceName = "This Device"
+    }
+
+    class WifiDirectBroadcastRcv : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val device = intent?.getParcelableExtra<WifiP2pDevice>(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE)
+            thisDeviceName = device?.deviceName!!
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intentFilter = IntentFilter(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION)
+        val receiver = WifiDirectBroadcastRcv();
+        registerReceiver(context, receiver, intentFilter, RECEIVER_NOT_EXPORTED)
 
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -77,6 +96,7 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
                         activeWifiDirectManager?.stop()
                         activeWifiDirectManager = null
                         dismiss()
+                        NetPlayDialog(context).show()
                     }
                     btnChat.setOnClickListener {
                         ChatDialog(context).show()
@@ -121,6 +141,10 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
                         showWifiDirectDialog()
                         dismiss()
                     }
+                    btnLobbyBrowser.setOnClickListener {
+                        LobbyBrowser(context).show()
+                        dismiss()
+                    }
                 }
             }
         }
@@ -163,18 +187,18 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
             override fun onSearching() {
                 binding.progress.visibility = View.VISIBLE
                 binding.recyclerPeers.visibility = View.GONE
-                binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_searching)
+                binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_searching, thisDeviceName)
             }
 
             override fun onPeersFound(peers: List<WifiP2pDevice>) {
                 if (peers.isEmpty()) {
                     binding.progress.visibility = View.VISIBLE
                     binding.recyclerPeers.visibility = View.GONE
-                    binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_searching)
+                    binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_searching, thisDeviceName)
                 } else {
                     binding.progress.visibility = View.GONE
                     binding.recyclerPeers.visibility = View.VISIBLE
-                    binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_select_peer)
+                    binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_select_peer, thisDeviceName)
                     peerAdapter.submitList(peers)
                 }
             }
@@ -182,13 +206,13 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
             override fun onConnecting(peerName: String) {
                 binding.recyclerPeers.visibility = View.GONE
                 binding.progress.visibility = View.VISIBLE
-                binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_connecting, peerName)
+                binding.textStatus.text = activity.getString(R.string.multiplayer_wifi_direct_connecting, thisDeviceName, peerName)
             }
 
             override fun onSettingUp(isHost: Boolean) {
                 binding.textStatus.text = activity.getString(
                     if (isHost) R.string.multiplayer_wifi_direct_setting_up_host
-                    else R.string.multiplayer_wifi_direct_setting_up_client
+                    else R.string.multiplayer_wifi_direct_setting_up_client, thisDeviceName
                 )
             }
 
@@ -200,15 +224,21 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
                     if (isHost) R.string.multiplayer_create_room_success else R.string.multiplayer_join_room_success,
                     Toast.LENGTH_LONG
                 ).show()
+                NetPlayDialog(context).show()
             }
 
             override fun onError(message: String) {
                 dialog.dismiss()
                 Toast.makeText(CitraApplication.appContext, message, Toast.LENGTH_LONG).show()
+                NetPlayDialog(context).show()
             }
         }
 
-        binding.btnCancel.setOnClickListener { dialog.dismiss() }
+        binding.btnCancel.setOnClickListener {
+            dialog.dismiss()
+            NetPlayDialog(context).show()
+        }
+
         // On cancel/error: tear down the group immediately and clear the reference.
         // On success: leave the group alive — the multiplayer session runs over it.
         //             The reference is kept in activeWifiDirectManager until the lobby is left.
@@ -362,7 +392,10 @@ class NetPlayDialog(context: Context) : BottomSheetDialog(context) {
         val activity = CompatUtils.findActivity(context)
         val dialog = BottomSheetDialog(activity)
 
-        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.setOnDismissListener {
+            NetPlayDialog(context).show()
+        }
+
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.behavior.skipCollapsed = context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 

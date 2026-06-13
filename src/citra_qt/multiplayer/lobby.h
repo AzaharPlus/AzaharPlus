@@ -124,6 +124,7 @@ public slots:
     void SetFilterOwned(bool);
     void SetFilterEmpty(bool);
     void SetFilterFull(bool);
+    void SetFilterLocked(bool);
     void SetFilterSearch(const QString&);
 
 private:
@@ -131,5 +132,6 @@ private:
     bool filter_owned = false;
     bool filter_empty = false;
     bool filter_full = false;
+    bool filter_locked = false;
     QString filter_search;
 };

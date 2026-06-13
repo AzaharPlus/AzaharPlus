@@ -329,7 +329,10 @@ void Config::ReadValues() {
 
     // Web Service
     NetSettings::values.web_api_url =
-        android_config->GetString("WebService", "web_api_url", "https://api.citra-emu.org");
+        android_config->GetString("WebService", "web_api_url", "http://88.198.47.46:5000");
+	if(NetSettings::values.web_api_url == "https://api.citra-emu.org"){
+		NetSettings::values.web_api_url = "http://88.198.47.46:5000";
+	}
     NetSettings::values.citra_username =
         android_config->GetString("WebService", "citra_username", "");
     NetSettings::values.citra_token = android_config->GetString("WebService", "citra_token", "");

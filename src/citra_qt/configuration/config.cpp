@@ -909,9 +909,12 @@ void QtConfig::ReadWebServiceValues() {
     qt_config->beginGroup(QStringLiteral("WebService"));
 
     NetSettings::values.web_api_url =
-        ReadSetting(Settings::QKeys::web_api_url, QStringLiteral("https://api.citra-emu.org"))
+        ReadSetting(Settings::QKeys::web_api_url, QStringLiteral("http://88.198.47.46:5000"))
             .toString()
             .toStdString();
+	if(NetSettings::values.web_api_url == "https://api.citra-emu.org"){
+		NetSettings::values.web_api_url = "http://88.198.47.46:5000";
+	}
     NetSettings::values.citra_username =
         ReadSetting(Settings::QKeys::citra_username).toString().toStdString();
     NetSettings::values.citra_token =
@@ -1441,7 +1444,7 @@ void QtConfig::SaveWebServiceValues() {
 
     WriteSetting(Settings::QKeys::web_api_url,
                  QString::fromStdString(NetSettings::values.web_api_url),
-                 QStringLiteral("https://api.citra-emu.org"));
+                 QStringLiteral("http://88.198.47.46:5000"));
     WriteSetting(Settings::QKeys::citra_username,
                  QString::fromStdString(NetSettings::values.citra_username));
     WriteSetting(Settings::QKeys::citra_token,
