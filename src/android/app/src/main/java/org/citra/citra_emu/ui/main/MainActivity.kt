@@ -106,7 +106,7 @@ class MainActivity :
             settingsViewModel.settings.loadSettings()
         }
 
-        ThemeUtil.ThemeChangeListener(this)
+        ThemeUtil.themeChangeListener(this)
         ThemeUtil.setTheme(this)
         super.onCreate(savedInstanceState)
         NativeLibrary.initMultiplayer()
