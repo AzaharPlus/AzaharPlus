@@ -4425,6 +4425,8 @@ void GMainWindow::OnImportZipPass() {
         if(res < 0) err++;
 	}
 	
+	game_list->PopulateAsync(UISettings::values.game_dirs);
+	
 	if(err > 0 && ret == 0) ret = -1;
 	
 	if(ret < 0){

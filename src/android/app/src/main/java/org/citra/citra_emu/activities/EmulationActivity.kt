@@ -225,6 +225,7 @@ class EmulationActivity : AppCompatActivity() {
     override fun onDestroy() {
         EmulationLifecycleUtil.removeHook(onShutdown)
         NativeLibrary.playTimeManagerStop()
+        NativeLibrary.resetProgramId()
         isEmulationRunning = false
         instance = null
         secondaryDisplayManager.releasePresentation()

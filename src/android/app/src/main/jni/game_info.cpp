@@ -14,6 +14,7 @@
 #include "core/loader/smdh.h"
 #include "jni/android_common/android_common.h"
 #include "jni/id_cache.h"
+#include "core/hle/service/cecd/cecd.h"
 
 namespace {
 
@@ -123,6 +124,34 @@ JNIEXPORT void JNICALL Java_org_citra_citra_1emu_model_GameInfo_finalize(JNIEnv*
     delete GetPointer(env, obj);
 }
 
+static int getNumMessages(std::string cecId)
+{
+    std::string inboxPath = FileUtil::GetUserPath(FileUtil::UserPath::NANDDir)
+                            + "/data/00000000000000000000000000000000/sysdata/00010026/00000000/CEC/"
+                            + cecId + "/InBox___";
+
+    if (!FileUtil::IsDirectory(inboxPath))
+    {
+        LOG_ERROR(HW, "no inbox {}", inboxPath);
+        return 0;
+    }
+
+    std::string boxInfoPath = inboxPath + "/BoxInfo_____";
+
+    if (!FileUtil::Exists(boxInfoPath))
+    {
+        LOG_ERROR(HW, "no boxInfo {}", boxInfoPath);
+        return 0;
+    }
+
+    struct Service::CECD::Module::CecBoxInfoHeader boxInfo;
+    FileUtil::IOFile bfile(boxInfoPath, "rb");
+    bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
+    bfile.Close();
+
+    return boxInfo.message_num;
+}
+
 jstring Java_org_citra_citra_1emu_model_GameInfo_getTitle(JNIEnv* env, jobject obj) {
     Loader::SMDH* smdh = &GetPointer(env, obj)->smdh;
     if (!smdh->IsValid()) {
@@ -135,7 +164,17 @@ jstring Java_org_citra_citra_1emu_model_GameInfo_getTitle(JNIEnv* env, jobject o
     std::u16string title{reinterpret_cast<char16_t*>(
         smdh->titles[static_cast<std::size_t>(language)].long_title.data())};
 
-    return ToJString(env, Common::UTF16ToUTF8(title).data());
+    std::string streetpassPrefix = "";
+    std::string cecId = FileUtil::getCecId(fmt::format("{:016X}", GetPointer(env, obj)->title_id));
+
+    if(cecId.length() == 8){
+        int n = getNumMessages(cecId);
+
+        if(n > 0)
+            streetpassPrefix = "[ " + std::to_string(n) + " ]  ";
+    }
+
+    return ToJString(env, (streetpassPrefix + Common::UTF16ToUTF8(title)).data());
 }
 
 jstring Java_org_citra_citra_1emu_model_GameInfo_getCompany(JNIEnv* env, jobject obj) {

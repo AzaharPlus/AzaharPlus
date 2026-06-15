@@ -48,6 +48,7 @@ std::string getProgramId()
 void resetProgramId()
 {
 	g_program_id = "";
+	FileUtil::setProgramId(g_program_id);
 }
 
 FileType AppLoader_NCCH::IdentifyType(FileUtil::IOFile* file) {
@@ -336,6 +337,7 @@ ResultStatus AppLoader_NCCH::Load(std::shared_ptr<Kernel::Process>& process) {
     std::string program_id{fmt::format("{:016X}", ncch_program_id)};
 
 	g_program_id = program_id;
+	FileUtil::setProgramId(g_program_id);
     LOG_INFO(Loader, "Program ID: {}", program_id);
 
     bool is_dlp_child = (ncch_program_id & 0xFFFFFFFF00000000) == DLP_CHILD_TID_HIGH;

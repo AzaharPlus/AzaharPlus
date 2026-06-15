@@ -48,6 +48,9 @@
 
 namespace FileUtil {
 
+void setProgramId(std::string id);
+std::string getCecId(std::string programId);
+
 // User paths for GetUserPath
 enum class UserPath {
     CacheDir,

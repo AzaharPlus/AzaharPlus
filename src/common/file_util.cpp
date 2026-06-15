@@ -1269,8 +1269,87 @@ void IOFile::Swap(IOFile& other) noexcept {
     std::swap(flags, other.flags);
 }
 
+static const std::string outboxSuffix = "/OutBox__/BoxInfo_____";
+static std::string g_program_id = "";
+static std::map<std::string, std::string> cecIds;
+static std::mutex load_mutex;
+static std::mutex save_mutex;
+static std::mutex get_mutex;
+
+void setProgramId(std::string id)
+{
+	g_program_id = id;
+}
+
+static void toLower(std::string &str)
+{
+	for(size_t i=0; i<str.length(); i++)
+	{
+		str[i] = (char)std::tolower(str[i]);
+	}
+}
+
+static void loadCecIds();
+
+std::string getCecId(std::string programId)
+{
+	std::scoped_lock lock(get_mutex);
+	loadCecIds();
+	toLower(programId);
+	
+	return cecIds[programId];
+}
+
+static void saveId(std::string programId, std::string cecId)
+{
+	std::scoped_lock lock(save_mutex);
+	if(getCecId(programId) != "") return;
+	
+	toLower(programId);
+	
+	// ADD new CEC ID at the end of the file
+	LOG_ERROR(HW, "saveId");
+	
+    const std::string path{
+        fmt::format("{}/cecIds.txt", FileUtil::GetUserPath(FileUtil::UserPath::SysDataDir))};
+		
+    if (!FileUtil::CreateFullPath(path)) {
+        LOG_ERROR(Service_FS, "Failed to create cecIds.txt");
+        return;
+    }
+	
+    FileUtil::IOFile file{path, "a"};
+    if (!file.IsOpen()) {
+        LOG_ERROR(Service_FS, "Failed to open cecIds.txt");
+        return;
+    }
+	
+	std::string cecIdEntry = "\n" + programId + ":" + cecId + "\n";
+	
+	toLower(cecIdEntry);
+	
+	if (file.WriteBytes(cecIdEntry.c_str(), cecIdEntry.length()) != cecIdEntry.length()) {
+        LOG_ERROR(Service_FS, "Failed to write cec id fully");
+    }
+	
+	cecIds[programId] = cecId;
+}
+
 bool IOFile::Open() {
     Close();
+
+	if (filename.ends_with(outboxSuffix) 
+	&& (openmode.find("w") != std::string::npos || openmode.find("+") != std::string::npos)
+	&& filename.length() > outboxSuffix.length() + 8
+	&& g_program_id.length() == 16)
+	{
+		std::string cecId = filename.substr(filename.length() - outboxSuffix.length() - 8, 8);
+		
+		LOG_ERROR(Common_Filesystem, "Open on file: {}, with mode: {}", filename, openmode);
+		LOG_ERROR(Common_Filesystem, "Program ID: {}, CECD ID: {}", g_program_id, cecId);
+		
+		saveId(g_program_id, cecId);
+	}
 
     // Any filename with the format fd://<file_descriptor> represents a file that
     // must be opened by duplicating the provided file_descriptor. This is used
@@ -1650,6 +1729,42 @@ void OpenFStream<std::ios_base::in>(
     boost::iostreams::file_descriptor_source file_descriptor_source(fd,
                                                                     boost::iostreams::close_handle);
     fstream.open(file_descriptor_source);
+}
+
+static void loadCecIds()
+{
+	std::scoped_lock lock(load_mutex);
+	static bool loaded = false;
+	if(loaded) return;
+	
+    const std::string filepath = FileUtil::GetUserPath(FileUtil::UserPath::SysDataDir) + "cecIds.txt";
+    FileUtil::CreateFullPath(filepath);
+
+    boost::iostreams::stream<boost::iostreams::file_descriptor_source> file;
+    FileUtil::OpenFStream<std::ios_base::in>(file, filepath);
+	
+    if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			std::string line;
+			std::getline(file, line);
+			
+			if(line.ends_with("\r"))
+			{
+				line.pop_back();
+			}
+			
+			toLower(line);
+
+			if (line.length() == 25 && line[16] == ':' && !line.starts_with("#"))
+			{
+				cecIds[line.substr(0, 16)] = line.substr(17, 8);
+			}
+		}
+		
+		loaded = true;
+	}
 }
 
 template <>
