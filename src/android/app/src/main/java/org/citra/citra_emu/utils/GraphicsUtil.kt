@@ -103,5 +103,8 @@ object GraphicsUtil {
         return rendererString
     }
 
-    fun isUsingAngleForOpenGL(): Boolean = (openGLRendererString.contains("ANGLE"))
+    fun isUsingAngleForOpenGL(): Boolean {
+		return false
+		openGLRendererString.contains("ANGLE")
+	}
 }

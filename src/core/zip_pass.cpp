@@ -47,7 +47,7 @@ int exportZipPass(std::string path)
 												  const std::string& v_name) -> bool {
 				std::string real_name = directory + DIR_SEP + v_name;
 #ifdef ANDROID
-				real_name = AndroidStorage::TranslateFilePath(real_name);
+				real_name = AndroidUtils::TranslateFilePath(real_name);
 #endif
 				if (v_name[0] == '_' && v_name.length() == 12) {
 					LOG_ERROR(Frontend, "streetpass file {}", FileUtil::SanitizePath(real_name));
