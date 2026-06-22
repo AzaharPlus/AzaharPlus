@@ -509,6 +509,33 @@ bool Copy(const std::string& srcFilename, const std::string& destFilename) {
 #endif
 }
 
+time_t GetDate(const std::string& filename) {
+    if (!Exists(filename)) {
+        LOG_ERROR(Common_Filesystem, "failed {}: No such file", filename);
+        return 0;
+    }
+
+    if (IsDirectory(filename)) {
+        LOG_ERROR(Common_Filesystem, "failed {}: is a directory", filename);
+        return 0;
+    }
+
+    struct stat buf;
+
+#if defined(ANDROID) && !defined(HAVE_LIBRETRO_VFS)
+	if (stat(AndroidUtils::TranslateFilePath(filename).c_str(), &buf) == 0)
+#else
+    if (stat(filename.c_str(), &buf) == 0)
+#endif
+    {
+        LOG_ERROR(Common_Filesystem, "{}: {}", filename, buf.st_mtime);
+        return buf.st_mtime;
+    }
+
+    LOG_ERROR(Common_Filesystem, "Stat failed {}: {}", filename, GetLastErrorMsg());
+    return 0;
+}
+
 u64 GetSize(const std::string& filename) {
     if (!Exists(filename)) {
         LOG_ERROR(Common_Filesystem, "failed {}: No such file", filename);

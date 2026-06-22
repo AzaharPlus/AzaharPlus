@@ -12,6 +12,9 @@
 #include "enet/enet.h"
 #include "network/packet.h"
 #include "network/room_member.h"
+#include "core/zip_pass.h"
+#include "common/file_util.h"
+#include "core/loader/ncch.h"
 
 namespace Network {
 
@@ -126,6 +129,8 @@ public:
      * @param event The ENet event that was received.
      */
     void HandleModBanListResponsePacket(const ENetEvent* event);
+	
+	void HandleAzaharPlusPecificPacket(const ENetEvent* event);
 
     /**
      * Disconnects the RoomMember from the Room
@@ -233,6 +238,9 @@ void RoomMember::RoomMemberImpl::MemberLoop() {
                     break;
                 case IdModNoSuchUser:
                     SetError(Error::NoSuchUser);
+                    break;
+                case idAzaharPlusSpecific:
+                    HandleAzaharPlusPecificPacket(&event);
                     break;
                 }
                 enet_packet_destroy(event.packet);
@@ -412,6 +420,134 @@ void RoomMember::RoomMemberImpl::HandleModBanListResponsePacket(const ENetEvent*
     packet >> ban_list.first;
     packet >> ban_list.second;
     Invoke<Room::BanList>(ban_list);
+}
+
+void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* event) {
+    // handle azaharplus packet
+	LOG_ERROR(Network, "HandleAzaharPlusPecificPacket");
+	
+	Packet packet;
+    packet.Append(event->packet->data, event->packet->dataLength);
+    packet.IgnoreBytes(sizeof(u8)); // Ignore the message type
+
+    u8 subType;
+    packet >> subType;
+	
+	switch(subType) {
+		case IdZipPassAnnounce: {
+			LOG_ERROR(Network, "IdZipPassAnnounce");
+			
+			const std::string path{fmt::format("{}/zippass/myAutoExport.pass.zip", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
+		
+			if (!FileUtil::CreateFullPath(path)) {
+				LOG_ERROR(Service_FS, "Failed to create myAutoExport.pass.zip");
+				break;
+			}
+			
+			std::string zip_path = path;
+			
+#ifdef ANDROID
+			zip_path = AndroidUtils::TranslateFilePath(path);
+#endif
+
+			int ret = Core::exportZipPass(zip_path);
+			
+			if(ret > 0) {
+				char* buffer = new char[1000000];
+				FileUtil::IOFile efile(path, "rb");
+				int tocopy = (int)efile.ReadBytes(buffer, 1000000);
+				efile.Close();
+				
+				if(tocopy > 0 && tocopy < 1000000) {
+					Packet packet;
+					packet << static_cast<u8>(idAzaharPlusSpecific);
+					packet << static_cast<u8>(IdZipPassUpload);
+					packet << static_cast<int>(tocopy);
+					packet.Append(buffer, tocopy);
+					Send(std::move(packet));
+				}
+				
+				delete[] buffer;
+			}
+			
+			break;
+		}
+			
+		case IdZipPassUpload:
+			LOG_ERROR(Network, "IdZipPassUpload");
+			break;
+			
+		case IdZipPassDownload: {
+			LOG_ERROR(Network, "IdZipPassDownload");
+			
+			std::string nickname;
+			int nicknameLength;
+			packet >> nicknameLength;
+			
+			if(nicknameLength < 64) {
+				nickname.resize(nicknameLength);
+				memcpy(nickname.data(), event->packet->data + 2*sizeof(u8) + sizeof(int), nicknameLength);
+				packet.IgnoreBytes(nicknameLength);
+				
+				int dataSize;
+				packet >> dataSize;
+				
+				if(dataSize > 0 && dataSize < 1000000
+				&& event->packet->dataLength == dataSize + 2*sizeof(u8) + 2*sizeof(int) + nicknameLength ) {
+					std::string dir = "history";
+					
+					if(Loader::getProgramId() != "") {
+						FileUtil::FSTEntry data_dir;
+						std::vector<FileUtil::FSTEntry> files;
+						const std::string queue_path{fmt::format("{}/zippass/queue", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
+						FileUtil::ScanDirectoryTree(queue_path, data_dir, 2048);
+						FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
+						
+						if (files.size() > 99) {
+							LOG_ERROR(Service_FS, "ZipPass queue is full");
+							break;
+						}
+						
+						dir = "queue";
+					}
+					
+					const std::string path{fmt::format("{}/zippass/{}/{}.pass.zip", 
+						FileUtil::GetUserPath(FileUtil::UserPath::UserDir),
+						dir,
+						nickname)};
+					
+					if (!FileUtil::CreateFullPath(path)) {
+						LOG_ERROR(Service_FS, "Failed to create {}", path);
+						break;
+					}
+
+					FileUtil::IOFile dfile(path, "wb");
+					int written = (int)dfile.WriteBytes(
+						event->packet->data + 2*sizeof(u8) + 2*sizeof(int) + nicknameLength, 
+						dataSize);
+					dfile.Close();
+					
+					if(dir == "history") {
+						std::string zip_path = path;
+						
+#ifdef ANDROID
+						zip_path = AndroidUtils::TranslateFilePath(path);
+#endif
+						Core::importZipPass(zip_path);
+						Core::trimZipPassHistory();
+					}
+				} else {
+					LOG_ERROR(Network, "bad data size {} / {}", dataSize, event->packet->dataLength);
+				}
+			}
+			
+			break;
+		}
+		
+		default:
+			LOG_ERROR(Network, "unknown subtype {}", subType);
+			break;
+	}
 }
 
 void RoomMember::RoomMemberImpl::Disconnect() {

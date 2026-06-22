@@ -75,6 +75,14 @@ enum RoomMessageTypes : u8 {
     IdModPermissionDenied,
     IdModNoSuchUser,
     IdJoinSuccessAsMod,
+	// Specific to AzaharPlus
+	idAzaharPlusSpecific = 0xff
+};
+
+enum AzaharPlusSpecificTypes : u8 {
+    IdZipPassAnnounce = 1,
+    IdZipPassUpload,
+    IdZipPassDownload,
 };
 
 /// Types of system status messages

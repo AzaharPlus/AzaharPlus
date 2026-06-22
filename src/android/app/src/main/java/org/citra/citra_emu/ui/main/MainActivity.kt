@@ -201,6 +201,7 @@ class MainActivity :
         }
 
         setInsets()
+        NativeLibrary.importQueuedZipPass()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

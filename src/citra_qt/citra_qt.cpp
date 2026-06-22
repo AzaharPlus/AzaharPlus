@@ -2827,6 +2827,7 @@ void GMainWindow::ShutdownGame() {
     }
 	
 	Loader::resetProgramId();
+	Core::importQueuedZipPass();
 
     if (ui->action_Fullscreen->isChecked()) {
         HideFullscreen();
@@ -5937,6 +5938,8 @@ int LaunchQtFrontend(int argc, char* argv[]) {
     QObject::connect(&app, &QGuiApplication::applicationStateChanged, &main_window,
                      &GMainWindow::OnAppFocusStateChanged);
 
+	Core::importQueuedZipPass();
+	
     int result = app.exec();
     return result;
 }

@@ -758,6 +758,10 @@ jint Java_org_citra_citra_1emu_NativeLibrary_importZipPass(JNIEnv *env, jobject 
     return Core::importZipPass(GetJString(env, path));
 }
 
+jint Java_org_citra_citra_1emu_NativeLibrary_importQueuedZipPass(JNIEnv *env, jobject thiz) {
+    return Core::importQueuedZipPass();
+}
+
 jint Java_org_citra_citra_1emu_NativeLibrary_exportZipPass(JNIEnv *env, jobject thiz, jstring path) {
     return Core::exportZipPass(GetJString(env, path));
 }

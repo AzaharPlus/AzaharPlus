@@ -133,6 +133,8 @@ private:
 // Returns the size of filename (64bit)
 [[nodiscard]] u64 GetSize(const std::string& filename);
 
+time_t GetDate(const std::string& filename);
+
 // Overloaded GetSize, accepts file descriptor
 [[nodiscard]] u64 GetSize(int fd);
 

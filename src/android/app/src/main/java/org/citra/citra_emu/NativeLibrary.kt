@@ -261,6 +261,8 @@ object NativeLibrary {
 
     external fun downloadTitleFromNus(title: Long): InstallStatus
     external fun importZipPass(path: String): Int
+    external fun importQueuedZipPass(): Int
+
     external fun exportZipPass(path: String): Int
     external fun clearStreetPassConfig(): Int
 

@@ -226,6 +226,7 @@ class EmulationActivity : AppCompatActivity() {
         EmulationLifecycleUtil.removeHook(onShutdown)
         NativeLibrary.playTimeManagerStop()
         NativeLibrary.resetProgramId()
+        NativeLibrary.importQueuedZipPass()
         isEmulationRunning = false
         instance = null
         secondaryDisplayManager.releasePresentation()

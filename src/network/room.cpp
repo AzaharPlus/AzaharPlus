@@ -34,6 +34,7 @@ public:
     std::string password; ///< The password required to connect to this room.
 
     struct Member {
+		Member(){zip_pass_data = NULL;}
         std::string nickname;        ///< The nickname of the member.
         std::string console_id_hash; ///< A hash of the console ID of the member.
         GameInfo game_info;          ///< The current game of the member
@@ -41,6 +42,8 @@ public:
         /// Data of the user, often including authenticated forum username.
         VerifyUser::UserData user_data;
         ENetPeer* peer; ///< The remote peer.
+		char *zip_pass_data;
+		int zip_pass_data_size;
     };
     using MemberList = std::vector<Member>;
     MemberList members;              ///< Information about the members of this room
@@ -94,6 +97,8 @@ public:
      * Validates the permissions and returns the ban list.
      */
     void HandleModGetBanListPacket(const ENetEvent* event);
+	
+	void HandleAzaharPlusPecificPacket(const ENetEvent* event);
 
     /**
      * Returns whether the nickname is valid, ie. isn't already taken by someone else in the room.
@@ -117,6 +122,10 @@ public:
      */
     bool HasModPermission(const ENetPeer* client) const;
 
+	void SendZipPassAnnounce(ENetPeer* client);
+	void SendZipPassDownloadPackets(ENetPeer* client);
+	void SendZipPassDownload(ENetPeer* client, std::string nickname, char* data, int dataSize);
+	
     /**
      * Sends a ID_ROOM_IS_FULL message telling the client that the room is full.
      */
@@ -279,6 +288,9 @@ void Room::RoomImpl::ServerLoop() {
                 case IdModGetBanList:
                     HandleModGetBanListPacket(&event);
                     break;
+                case idAzaharPlusSpecific:
+                    HandleAzaharPlusPecificPacket(&event);
+                    break;
                 }
                 enet_packet_destroy(event.packet);
                 break;
@@ -417,6 +429,8 @@ void Room::RoomImpl::HandleJoinRequest(const ENetEvent* event) {
     } else {
         SendJoinSuccess(event->peer, preferred_mac);
     }
+	
+	SendZipPassAnnounce(event->peer);
 }
 
 void Room::RoomImpl::HandleModKickPacket(const ENetEvent* event) {
@@ -453,6 +467,7 @@ void Room::RoomImpl::HandleModKickPacket(const ENetEvent* event) {
         ip = ip_raw;
 
         enet_peer_disconnect(target_member->peer, 0);
+		if(target_member->zip_pass_data) delete[] target_member->zip_pass_data;
         members.erase(target_member);
     }
 
@@ -496,6 +511,7 @@ void Room::RoomImpl::HandleModBanPacket(const ENetEvent* event) {
         ip = ip_raw;
 
         enet_peer_disconnect(target_member->peer, 0);
+		if(target_member->zip_pass_data) delete[] target_member->zip_pass_data;
         members.erase(target_member);
     }
 
@@ -568,6 +584,58 @@ void Room::RoomImpl::HandleModGetBanListPacket(const ENetEvent* event) {
     SendModBanListResponse(event->peer);
 }
 
+void Room::RoomImpl::HandleAzaharPlusPecificPacket(const ENetEvent* event) {
+    // handle azaharplus packet
+	LOG_ERROR(Network, "HandleAzaharPlusPecificPacket");
+	
+	Packet packet;
+    packet.Append(event->packet->data, event->packet->dataLength);
+    packet.IgnoreBytes(sizeof(u8)); // Ignore the message type
+
+    u8 subType;
+    packet >> subType;
+	
+	switch(subType) {
+		case IdZipPassAnnounce:
+			LOG_ERROR(Network, "IdZipPassAnnounce");
+			break;
+			
+		case IdZipPassUpload:
+			LOG_ERROR(Network, "IdZipPassUpload");
+			
+			int dataSize;
+			packet >> dataSize;
+			
+			if(dataSize > 0 && dataSize < 1000000
+			&& event->packet->dataLength == dataSize + 2*sizeof(u8) + sizeof(int) ) {
+				std::lock_guard lock(member_mutex);
+				auto member =
+					std::find_if(members.begin(), members.end(), [event](const Member& member) -> bool {
+						return member.peer == event->peer;
+					});
+				if (member != members.end()) {
+					member->zip_pass_data = new char[dataSize];
+					member->zip_pass_data_size = dataSize;
+					memcpy(member->zip_pass_data, event->packet->data + 2*sizeof(u8) + sizeof(int), dataSize);
+					
+					SendZipPassDownloadPackets(event->peer);
+				}
+			} else {
+				LOG_ERROR(Network, "bad data size {} / {}", dataSize, event->packet->dataLength);
+			}
+			
+			break;
+			
+		case IdZipPassDownload:
+			LOG_ERROR(Network, "IdZipPassDownload");
+			break;
+			
+		default:
+			LOG_ERROR(Network, "unknown subtype {}", subType);
+			break;
+	}
+}
+
 bool Room::RoomImpl::IsValidNickname(const std::string& nickname) const {
     // A nickname is valid if it matches the regex and is not already taken by anybody else in the
     // room.
@@ -613,6 +681,47 @@ bool Room::RoomImpl::HasModPermission(const ENetPeer* client) const {
         return true;
     }
     return false;
+}
+
+void Room::RoomImpl::SendZipPassAnnounce(ENetPeer* client) {
+    Packet packet;
+    packet << static_cast<u8>(idAzaharPlusSpecific);
+    packet << static_cast<u8>(IdZipPassAnnounce);
+
+    ENetPacket* enet_packet =
+        enet_packet_create(packet.GetData(), packet.GetDataSize(), ENET_PACKET_FLAG_RELIABLE);
+    enet_peer_send(client, 0, enet_packet);
+    enet_host_flush(server);
+}
+
+void Room::RoomImpl::SendZipPassDownload(ENetPeer* client, std::string nickname, char* data, int dataSize) {
+	Packet packet;
+	packet << static_cast<u8>(idAzaharPlusSpecific);
+	packet << static_cast<u8>(IdZipPassDownload);
+	packet << static_cast<int>(nickname.length());
+	packet.Append(nickname.data(), nickname.length());
+	packet << static_cast<int>(dataSize);
+	packet.Append(data, dataSize);
+	
+	ENetPacket* enet_packet =
+		enet_packet_create(packet.GetData(), packet.GetDataSize(), ENET_PACKET_FLAG_RELIABLE);
+	enet_peer_send(client, 0, enet_packet);
+	enet_host_flush(server);
+}
+
+void Room::RoomImpl::SendZipPassDownloadPackets(ENetPeer* client) {	
+	auto new_member =
+		std::find_if(members.begin(), members.end(), [client](const Member& member) -> bool {
+			return member.peer == client;
+		});
+	if (new_member != members.end()) {
+		for(auto& member : members) {
+			if(member.zip_pass_data != NULL && member.peer != client) {
+				SendZipPassDownload(member.peer, new_member->nickname, new_member->zip_pass_data, new_member->zip_pass_data_size);
+				SendZipPassDownload(new_member->peer, member.nickname, member.zip_pass_data, member.zip_pass_data_size);
+			}
+		}
+	}
 }
 
 void Room::RoomImpl::SendNameCollision(ENetPeer* client) {
@@ -996,6 +1105,7 @@ void Room::RoomImpl::HandleClientDisconnection(ENetPeer* client) {
             enet_address_get_host_ip(&member->peer->address, ip_raw, sizeof(ip_raw) - 1);
             ip = ip_raw;
 
+			if(member->zip_pass_data) delete[] member->zip_pass_data;
             members.erase(member);
         }
     }
@@ -1104,6 +1214,9 @@ void Room::Destroy() {
     room_impl->server = nullptr;
     {
         std::lock_guard lock(room_impl->member_mutex);
+		for(auto& member : room_impl->members) {
+			if(member.zip_pass_data) delete[] member.zip_pass_data;
+		}
         room_impl->members.clear();
     }
     room_impl->room_information.member_slots = 0;

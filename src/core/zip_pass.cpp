@@ -288,6 +288,80 @@ int importZipPass(std::string path)
 	return ret;
 }
 
+int importQueuedZipPass()
+{
+	LOG_ERROR(HW, "importQueuedZipPass");
+	
+	FileUtil::FSTEntry data_dir;
+    std::vector<FileUtil::FSTEntry> files;
+	const std::string queue_path{fmt::format("{}/zippass/queue", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
+	const std::string history_path{fmt::format("{}/zippass/history/", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
+	
+	if (!FileUtil::CreateFullPath(history_path)) {
+		LOG_ERROR(Service_FS, "Failed to create history_path");
+		return -10;
+	}
+	
+    FileUtil::ScanDirectoryTree(queue_path, data_dir, 2048);
+    FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
+	
+	for(size_t i=0; i<files.size(); i++)
+	{
+		std::string file = files[i].physicalName;
+		
+		if(file.ends_with(".pass.zip"))
+		{
+			std::string zip_path = file;
+			
+#ifdef ANDROID
+			zip_path = AndroidUtils::TranslateFilePath(file);
+#endif
+
+			int ret = Core::importZipPass(zip_path);
+			
+			if(ret < 0) {
+				return ret;
+			}
+			
+			const std::string newPath = history_path + FileUtil::SplitPathComponents(file).back();
+			
+			FileUtil::Delete(newPath);
+			FileUtil::Rename(file, newPath);
+		}
+		
+		FileUtil::Delete(file);
+	}
+	
+	Core::trimZipPassHistory();
+	
+	return 0;
+}
+
+void trimZipPassHistory()
+{
+	const std::string history_path{fmt::format("{}/zippass/history/", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
+	FileUtil::FSTEntry data_dir;
+    std::vector<FileUtil::FSTEntry> files;
+	
+    FileUtil::ScanDirectoryTree(history_path, data_dir, 2048);
+    FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
+	
+	int toRemove = files.size() - 100;
+	
+	if(toRemove > 0) {
+		std::map<time_t, std::string> historyFiles;
+		
+		for(auto file : files) {
+			historyFiles[FileUtil::GetDate(file.physicalName)] = file.physicalName;
+		}
+		
+		for(auto it = historyFiles.begin(); it != historyFiles.end() && toRemove > 0; it++) {
+			FileUtil::Delete(it->second);
+			toRemove--;
+		}
+	}
+}
+
 int clearStreetPassConfig()
 {
 	const auto callback = [](u64* num_entries_out, const std::string& directory,
