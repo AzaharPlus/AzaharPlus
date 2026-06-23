@@ -103,7 +103,7 @@ class Game(
         )
 
         val badExtensions: Set<String> = HashSet(
-            listOf("rar", "zip", "7z", "torrent", "tar", "gz")
+            listOf("rar", "7z", "torrent", "tar", "gz")
         )
     }
 }

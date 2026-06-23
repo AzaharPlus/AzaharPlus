@@ -437,6 +437,11 @@ void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* 
 		case IdZipPassAnnounce: {
 			LOG_ERROR(Network, "IdZipPassAnnounce");
 			
+			u32 version;
+			packet >> version;
+			
+			LOG_ERROR(Network, "version {}", version);
+			
 			const std::string path{fmt::format("{}/zippass/myAutoExport.pass.zip", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
 		
 			if (!FileUtil::CreateFullPath(path)) {
@@ -462,7 +467,8 @@ void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* 
 					Packet packet;
 					packet << static_cast<u8>(idAzaharPlusSpecific);
 					packet << static_cast<u8>(IdZipPassUpload);
-					packet << static_cast<int>(tocopy);
+					packet << static_cast<u32>(azaharplus_network_version);
+					packet << static_cast<u32>(tocopy);
 					packet.Append(buffer, tocopy);
 					Send(std::move(packet));
 				}
@@ -481,19 +487,19 @@ void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* 
 			LOG_ERROR(Network, "IdZipPassDownload");
 			
 			std::string nickname;
-			int nicknameLength;
+			u32 nicknameLength;
 			packet >> nicknameLength;
 			
 			if(nicknameLength < 64) {
 				nickname.resize(nicknameLength);
-				memcpy(nickname.data(), event->packet->data + 2*sizeof(u8) + sizeof(int), nicknameLength);
+				memcpy(nickname.data(), event->packet->data + 2*sizeof(u8) + sizeof(u32), nicknameLength);
 				packet.IgnoreBytes(nicknameLength);
 				
-				int dataSize;
+				u32 dataSize;
 				packet >> dataSize;
 				
 				if(dataSize > 0 && dataSize < 1000000
-				&& event->packet->dataLength == dataSize + 2*sizeof(u8) + 2*sizeof(int) + nicknameLength ) {
+				&& event->packet->dataLength == dataSize + 2*sizeof(u8) + 2*sizeof(u32) + nicknameLength ) {
 					std::string dir = "history";
 					
 					if(Loader::getProgramId() != "") {
@@ -523,7 +529,7 @@ void RoomMember::RoomMemberImpl::HandleAzaharPlusPecificPacket(const ENetEvent* 
 
 					FileUtil::IOFile dfile(path, "wb");
 					int written = (int)dfile.WriteBytes(
-						event->packet->data + 2*sizeof(u8) + 2*sizeof(int) + nicknameLength, 
+						event->packet->data + 2*sizeof(u8) + 2*sizeof(u32) + nicknameLength, 
 						dataSize);
 					dfile.Close();
 					

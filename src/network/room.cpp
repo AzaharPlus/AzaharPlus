@@ -603,20 +603,29 @@ void Room::RoomImpl::HandleAzaharPlusPecificPacket(const ENetEvent* event) {
 		case IdZipPassUpload:
 			LOG_ERROR(Network, "IdZipPassUpload");
 			
-			int dataSize;
+			u32 version;
+			packet >> version;
+			
+			LOG_ERROR(Network, "version {}", version);
+			
+			u32 dataSize;
 			packet >> dataSize;
 			
 			if(dataSize > 0 && dataSize < 1000000
-			&& event->packet->dataLength == dataSize + 2*sizeof(u8) + sizeof(int) ) {
+			&& event->packet->dataLength == dataSize + 2*sizeof(u8) + 2*sizeof(u32) ) {
 				std::lock_guard lock(member_mutex);
 				auto member =
 					std::find_if(members.begin(), members.end(), [event](const Member& member) -> bool {
 						return member.peer == event->peer;
 					});
 				if (member != members.end()) {
+					if(member->zip_pass_data) {
+						LOG_ERROR(Network, "Ignoring extra upload from {}", member->nickname);
+						break;
+					}
 					member->zip_pass_data = new char[dataSize];
 					member->zip_pass_data_size = dataSize;
-					memcpy(member->zip_pass_data, event->packet->data + 2*sizeof(u8) + sizeof(int), dataSize);
+					memcpy(member->zip_pass_data, event->packet->data + 2*sizeof(u8) + 2*sizeof(u32), dataSize);
 					
 					SendZipPassDownloadPackets(event->peer);
 				}
@@ -687,6 +696,7 @@ void Room::RoomImpl::SendZipPassAnnounce(ENetPeer* client) {
     Packet packet;
     packet << static_cast<u8>(idAzaharPlusSpecific);
     packet << static_cast<u8>(IdZipPassAnnounce);
+    packet << static_cast<u32>(azaharplus_network_version);
 
     ENetPacket* enet_packet =
         enet_packet_create(packet.GetData(), packet.GetDataSize(), ENET_PACKET_FLAG_RELIABLE);
@@ -698,9 +708,9 @@ void Room::RoomImpl::SendZipPassDownload(ENetPeer* client, std::string nickname,
 	Packet packet;
 	packet << static_cast<u8>(idAzaharPlusSpecific);
 	packet << static_cast<u8>(IdZipPassDownload);
-	packet << static_cast<int>(nickname.length());
+	packet << static_cast<u32>(nickname.length());
 	packet.Append(nickname.data(), nickname.length());
-	packet << static_cast<int>(dataSize);
+	packet << static_cast<u32>(dataSize);
 	packet.Append(data, dataSize);
 	
 	ENetPacket* enet_packet =
