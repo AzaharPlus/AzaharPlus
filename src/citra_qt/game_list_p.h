@@ -148,6 +148,20 @@ static const std::unordered_map<UISettings::GameListIconSize, int> IconSizes{
     {UISettings::GameListIconSize::LargeIcon, 48},
 };
 
+static int getNumExtMessages(std::string cecId)
+{
+	const std::string ext_inbox_path{fmt::format("{}/zippass/inboxes/{}/", 
+				FileUtil::GetUserPath(FileUtil::UserPath::UserDir),
+				cecId)};
+	
+	FileUtil::FSTEntry data_dir;
+	std::vector<FileUtil::FSTEntry> files;
+	FileUtil::ScanDirectoryTree(ext_inbox_path, data_dir, 2048);
+	FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
+	
+	return files.size();
+}
+
 static int getNumMessages(std::string cecId)
 {
 	std::string inboxPath = FileUtil::GetUserPath(FileUtil::UserPath::NANDDir)
@@ -156,7 +170,6 @@ static int getNumMessages(std::string cecId)
 	
 	if (!FileUtil::IsDirectory(inboxPath))
 	{
-		LOG_ERROR(HW, "no inbox {}", inboxPath);
 		return 0;
 	}
 	
@@ -164,7 +177,6 @@ static int getNumMessages(std::string cecId)
 	
 	if (!FileUtil::Exists(boxInfoPath))
 	{
-		LOG_ERROR(HW, "no boxInfo {}", boxInfoPath);
 		return 0;
 	}
 	
@@ -267,9 +279,13 @@ public:
 			if(cecId.length() == 8)
 			{
 				int n = getNumMessages(cecId);
+				int ext = getNumExtMessages(cecId);
 				
 				if(n > 0)
 					streetpassPrefix = "[ " + std::to_string(n) + " ]   ";
+				
+				if(ext > 0)
+					streetpassPrefix = "[ " + std::to_string(n) + " + " + std::to_string(ext) + " ]   ";
 			}
 			
             const QString& row1 = QString::fromStdString(streetpassPrefix) +

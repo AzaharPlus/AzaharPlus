@@ -78,17 +78,15 @@ int exportZipPass(std::string path)
 	return ret;
 }
 
-int importZipPass(std::string path)
+static int zipPassChecks()
 {
-	LOG_ERROR(Frontend, "importZipPass {}", path);
-	
 	int nHomes = 0;
 	
 	for (u32 region = 0; region < Core::NUM_SYSTEM_TITLE_REGIONS; region++) {
 		if(region == 3) continue;
-		const auto path = Core::GetHomeMenuNcchPath(region);
+		const auto hpath = Core::GetHomeMenuNcchPath(region);
 	
-		if(!path.empty() && FileUtil::Exists(path))
+		if(!hpath.empty() && FileUtil::Exists(hpath))
 		{
 			nHomes++;
 		}
@@ -106,8 +104,18 @@ int importZipPass(std::string path)
 		return -3;
 	}
 	
-	int ret = 0;
+	return 0;
+}
+
+int importZipPass(std::string path)
+{
+	LOG_ERROR(Frontend, "importZipPass {}", path);
+	
+	int ret = zipPassChecks();
 	int err = 0;
+	
+	if(ret) return ret;
+	
 	zip_t *za = zip_open(path.c_str(), ZIP_RDONLY, &err);
 	LOG_ERROR(HW, "zip_open {}", err);
 	
@@ -178,14 +186,35 @@ int importZipPass(std::string path)
 		FileUtil::IOFile bfile(boxInfoPath, "rb+");
 		int nRead = bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
 		
-		if(boxInfo.message_num >= boxInfo.max_message_num
-			|| st.size > boxInfo.max_message_size)
+		if(st.size > boxInfo.max_message_size)
 		{
 			bfile.Close();
-			LOG_ERROR(HW, "box full {} / {} or message too big {} / {}", 
-				boxInfo.message_num, boxInfo.max_message_num, st.size, boxInfo.max_message_size);
+			LOG_ERROR(HW, "message too big {} / {}", st.size, boxInfo.max_message_size);
 			continue;
-		}		
+		}
+		
+		const std::string ext_inbox_path{fmt::format("{}/zippass/inboxes/{}/", 
+					FileUtil::GetUserPath(FileUtil::UserPath::UserDir),
+					id)};
+		bool ext_inbox = false;
+
+		if(boxInfo.message_num >= boxInfo.max_message_num)
+		{
+			FileUtil::CreateFullPath(ext_inbox_path);
+			ext_inbox = true;
+			LOG_ERROR(HW, "streetpass inbox full {} / {} -> external inbox", boxInfo.message_num, boxInfo.max_message_num);
+			
+			FileUtil::FSTEntry data_dir;
+			std::vector<FileUtil::FSTEntry> files;
+			FileUtil::ScanDirectoryTree(ext_inbox_path, data_dir, 2048);
+			FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
+			
+			if (files.size() > 99) {
+				bfile.Close();
+				LOG_ERROR(Service_FS, "external inbox is full");
+				continue;
+			}
+		}
 		
 		zip_file_t *file = zip_fopen_index(za, i, 0);
 		
@@ -248,6 +277,10 @@ int importZipPass(std::string path)
 		
 		std::string path = inboxPath + DIR_SEP + filename;
 		
+		if(ext_inbox) {
+			path = ext_inbox_path + filename;
+		}
+		
 		FileUtil::IOFile dfile(path, "wb");
 	
 		int written = (int)dfile.WriteBytes(buff, st.size);
@@ -266,15 +299,17 @@ int importZipPass(std::string path)
 			break;
 		}
 		
-		boxInfo.message_num++;
-		boxInfo.box_info_size += 0x70;
-		boxInfo.box_size += st.size;
-		
-		bfile.Seek(0, SEEK_SET);
-		bfile.WriteBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
-		
-		bfile.Seek(0, SEEK_END);
-		bfile.WriteBytes(buff, 0x70);
+		if(!ext_inbox) {
+			boxInfo.message_num++;
+			boxInfo.box_info_size += 0x70;
+			boxInfo.box_size += st.size;
+			
+			bfile.Seek(0, SEEK_SET);
+			bfile.WriteBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
+			
+			bfile.Seek(0, SEEK_END);
+			bfile.WriteBytes(buff, 0x70);
+		}
 		
 		bfile.Close();
 		delete[] buff;
@@ -292,8 +327,12 @@ int importQueuedZipPass()
 {
 	LOG_ERROR(HW, "importQueuedZipPass");
 	
+	int chck = zipPassChecks();
+	if(chck) return chck;
+	
 	FileUtil::FSTEntry data_dir;
     std::vector<FileUtil::FSTEntry> files;
+	const std::string inboxes_path{fmt::format("{}/zippass/inboxes", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
 	const std::string queue_path{fmt::format("{}/zippass/queue", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
 	const std::string history_path{fmt::format("{}/zippass/history/", FileUtil::GetUserPath(FileUtil::UserPath::UserDir))};
 	
@@ -302,6 +341,70 @@ int importQueuedZipPass()
 		return -10;
 	}
 	
+    FileUtil::ScanDirectoryTree(inboxes_path, data_dir, 2048);
+    FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
+	
+	for(size_t i=0; i<files.size(); i++)
+	{
+		std::string file = files[i].physicalName;
+		auto filepath_elems = FileUtil::SplitPathComponents(file);
+		
+		if(filepath_elems.size() > 1) {
+			std::string filename = filepath_elems.back();
+			filepath_elems.pop_back();
+			std::string folder = filepath_elems.back();
+			
+			LOG_ERROR(Service_FS, "Import from ext inbox {} / {}", folder, filename);
+			
+			std::string inbox = FileUtil::GetUserPath(FileUtil::UserPath::NANDDir)
+			+ DIR_SEP + "data" + DIR_SEP + "00000000000000000000000000000000" 
+			+ DIR_SEP + "sysdata" + DIR_SEP + "00010026" + DIR_SEP + "00000000" 
+			+ DIR_SEP + "CEC" + DIR_SEP + folder + DIR_SEP + "InBox___";
+			
+			std::string boxInfoPath = inbox + DIR_SEP + "BoxInfo_____";
+			
+			if (FileUtil::IsDirectory(inbox) && FileUtil::Exists(boxInfoPath))
+			{
+				struct Service::CECD::Module::CecBoxInfoHeader boxInfo;
+				FileUtil::IOFile bfile(boxInfoPath, "rb+");
+				int nRead = bfile.ReadBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
+				
+				if(boxInfo.message_num >= boxInfo.max_message_num)
+				{
+					LOG_ERROR(Service_FS, "streetpass inbox full {} / {}", boxInfo.message_num, boxInfo.max_message_num);
+					bfile.Close();
+					continue;
+				}
+				
+				unsigned char* buff = new unsigned char[0x70];
+				FileUtil::IOFile spfile(file, "rb");
+				
+				spfile.ReadBytes(buff, 0x70);
+				spfile.Close();
+				
+				u64 size = FileUtil::GetSize(file);
+				FileUtil::Rename(file, inbox + DIR_SEP + filename);
+				
+				boxInfo.message_num++;
+				boxInfo.box_info_size += 0x70;
+				boxInfo.box_size += size;
+				
+				bfile.Seek(0, SEEK_SET);
+				bfile.WriteBytes(&boxInfo, sizeof(Service::CECD::Module::CecBoxInfoHeader));
+				
+				bfile.Seek(0, SEEK_END);
+				bfile.WriteBytes(buff, 0x70);
+				
+				delete[] buff;
+				bfile.Close();
+			}
+		}
+		
+		FileUtil::Delete(file);
+	}
+	
+	data_dir.children.clear();
+	files.clear();
     FileUtil::ScanDirectoryTree(queue_path, data_dir, 2048);
     FileUtil::GetAllFilesFromNestedEntries(data_dir, files);
 	
