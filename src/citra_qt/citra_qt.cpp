@@ -5938,6 +5938,9 @@ int LaunchQtFrontend(int argc, char* argv[]) {
     QObject::connect(&app, &QGuiApplication::applicationStateChanged, &main_window,
                      &GMainWindow::OnAppFocusStateChanged);
 
+    // Process any pending events before executing the app (prevents freeze-on–boot on macOS)
+    app.processEvents();
+
 	Core::importQueuedZipPass();
 	
     int result = app.exec();
