@@ -981,6 +981,8 @@ class AmiiboDatabase {
             "@3f000000042e0002" to "Sora",
             "@1f00000004c41e03" to "Kirby (& Warp Star)",
             "@1f03010004c91e03" to "Bandana Waddle Dee (& Winged Star)",
+            "@010d000004a70902" to "Mineru's Construct",
+            "@1f02000004c71e03" to "King Dedede (& Tank Star)",
         )
     }
 }

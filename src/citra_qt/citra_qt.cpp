@@ -1206,7 +1206,9 @@ static std::map<std::string, std::string> amiibos = {
 	{"@22440000043e1b02", "Mio"},
 	{"@3f000000042e0002", "Sora"},
 	{"@1f00000004c41e03", "Kirby (&& Warp Star)"},
-	{"@1f03010004c91e03", "Bandana Waddle Dee (&& Winged Star)"}
+	{"@1f03010004c91e03", "Bandana Waddle Dee (&& Winged Star)"},
+	{"@010d000004a70902", "Mineru's Construct"},
+	{"@1f02000004c71e03", "King Dedede (&& Tank Star)"},
 };
 
 static std::map<std::string, std::string> amiibos_series = {
