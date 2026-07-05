@@ -3937,7 +3937,14 @@ void GMainWindow::OnMenuAmiiboFileAction() {
 													tr("Amiibo (*.bin)"));
 	if(fileName.length() == 0) return;
 	
-	Service::NFC::makeAmiiboFile(amiiboId.toStdString(), fileName.toStdString());
+	std::string sfilename = fileName.toStdString();
+	
+	if(!fileName.endsWith(QStringLiteral(".bin")))
+	{
+		sfilename = sfilename + ".bin";
+	}
+	
+	Service::NFC::makeAmiiboFile(amiiboId.toStdString(), sfilename);
 }
 
 void GMainWindow::OnMenuAmiiboAction() {
