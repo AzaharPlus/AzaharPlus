@@ -88,6 +88,8 @@ android {
             }
         }
 
+        buildConfigField("String", "GIT_VERSION", "\"${getGitVersion()}\"")
+        // ^ Has no suffix, unlike VERSION_NAME
         buildConfigField("String", "GIT_HASH", "\"${getGitHash()}\"")
         buildConfigField("String", "BRANCH", "\"${getBranch()}\"")
     }
