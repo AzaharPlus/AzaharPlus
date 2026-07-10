@@ -140,6 +140,7 @@ object NativeLibrary {
     external fun setUserDirectory(directory: String)
 
     data class InstalledGame(val path: String, val mediaType: Game.MediaType)
+
     fun getInstalledGamePaths(): Array<InstalledGame> {
         val games = getInstalledGamePathsImpl()
 
@@ -155,6 +156,7 @@ object NativeLibrary {
             }
         }.toTypedArray()
     }
+
     private external fun getInstalledGamePathsImpl(): Array<String?>
 
     // Create the config.ini file.

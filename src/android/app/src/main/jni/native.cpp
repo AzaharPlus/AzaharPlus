@@ -54,7 +54,6 @@
 #include "jni/camera/ndk_camera.h"
 #include "jni/camera/still_image_camera.h"
 #include "jni/config.h"
-
 #include "network/announce_multiplayer_session.h"
 #include "core/loader/ncch.h"
 
@@ -108,11 +107,11 @@ std::mutex paused_mutex;
 std::mutex running_mutex;
 std::condition_variable running_cv;
 
-// Abdroid Multiplayer which can be initialized with parameters
+std::string inserted_cartridge;
+
+// Android Multiplayer which can be initialized with parameters
 std::unique_ptr<AndroidMultiplayer> multiplayer{nullptr};
 std::shared_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
-
-std::string inserted_cartridge;
 
 } // Anonymous namespace
 
@@ -982,6 +981,10 @@ void Java_org_citra_citra_1emu_NativeLibrary_reloadSettings([[maybe_unused]] JNI
         system.GetAppLoader().ReadProgramId(program_id);
     }
 
+    if (multiplayer) {
+        multiplayer->UpdateCredentials();
+    }
+
     system.ApplySettings();
 }
 
@@ -1074,7 +1077,8 @@ Java_org_citra_citra_1emu_NativeLibrary_initMultiplayer(JNIEnv* env, [[maybe_unu
         return;
     }
 
-    announce_multiplayer_session = std::make_shared<Network::AnnounceMultiplayerSession>();
+    announce_multiplayer_session = std::make_shared<Network::AnnounceMultiplayerSession>(
+        Service::CFG::GetUsername(Core::System::GetInstance()));
 
     multiplayer = std::make_unique<AndroidMultiplayer>(Core::System::GetInstance(),
                                                        announce_multiplayer_session);

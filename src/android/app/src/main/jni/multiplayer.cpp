@@ -1,10 +1,13 @@
+// Copyright Citra Emulator Project / Azahar Emulator Project
+// Licensed under GPLv2 or any later version
+// Refer to the license.txt file included.
+
 // Copyright 2024 Mandarine Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
 #include <chrono>
 #include <thread>
-#include <network/network_settings.h>
 #include "common/logging/log.h"
 #include "core/core.h"
 #include "core/hle/service/cfg/cfg.h"
@@ -167,8 +170,8 @@ NetPlayStatus AndroidMultiplayer::NetPlayCreateRoom(const std::string& ipaddress
         return NetPlayStatus::CREATE_ROOM_ERROR;
     }
 
-    if (!room->Create(room_name, "", ipaddress, port, password, std::min(max_players, 16),
-                      NetSettings::values.citra_username, preferedGameName, preferedGameId,
+    if (!room->Create(room_name, "", ipaddress, port, password, std::min(max_players, 16), username,
+                      preferedGameName, preferedGameId,
                       std::make_unique<Network::VerifyUser::NullBackend>(), {})) {
         return NetPlayStatus::CREATE_ROOM_ERROR;
     }
@@ -384,4 +387,10 @@ std::vector<std::string> AndroidMultiplayer::NetPlayGetBanList() {
         }
     }
     return ban_list;
+}
+
+void AndroidMultiplayer::UpdateCredentials() {
+    if (auto session = announce_multiplayer_session.lock()) {
+        session->UpdateCredentials(Service::CFG::GetUsername(Core::System::GetInstance()));
+    }
 }

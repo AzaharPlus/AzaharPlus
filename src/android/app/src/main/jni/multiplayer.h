@@ -1,3 +1,7 @@
+// Copyright Citra Emulator Project / Azahar Emulator Project
+// Licensed under GPLv2 or any later version
+// Refer to the license.txt file included.
+
 // Copyright 2024 Mandarine Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
@@ -96,6 +100,8 @@ public:
     void NetPlayUnbanUser(const std::string& username);
 
     std::vector<std::string> NetPlayGetPublicRooms();
+
+    void UpdateCredentials();
 
 private:
     Core::System& system;
