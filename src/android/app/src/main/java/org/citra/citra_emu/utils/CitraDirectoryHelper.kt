@@ -43,7 +43,7 @@ class CitraDirectoryHelper(
                 )
                 if (!moveData || previous.toString().isEmpty()) {
                     initializeCitraDirectory(path)
-                    buttonState()
+                //    buttonState()
                     val viewModel = ViewModelProvider(fragmentActivity)[HomeViewModel::class.java]
                     viewModel.setUserDir(fragmentActivity, path.path!!)
                     viewModel.setPickingUserDir(false)
