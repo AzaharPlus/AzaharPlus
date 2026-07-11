@@ -278,17 +278,18 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     IntSetting.TURBO_LIMIT.defaultValue.toFloat()
                 )
             )
-            add(
-                SwitchSetting(
-                    BooleanSetting.CHECK_FOR_UPDATES,
-                    R.string.check_for_updates,
-                    R.string.check_for_updates_description,
-                    BooleanSetting.CHECK_FOR_UPDATES.key,
-                    BooleanSetting.CHECK_FOR_UPDATES.defaultValue,
-                    isEnabled = !BuildConfig.DEBUG
+            if (!BuildUtil.isGooglePlayBuild
+                && false) {
+                add(
+                    SwitchSetting(
+                        BooleanSetting.CHECK_FOR_UPDATES,
+                        R.string.check_for_updates,
+                        R.string.check_for_updates_description,
+                        BooleanSetting.CHECK_FOR_UPDATES.key,
+                        BooleanSetting.CHECK_FOR_UPDATES.defaultValue,
+                        isEnabled = !BuildConfig.DEBUG
+                    )
                 )
-            )
-            if (!BuildUtil.isGooglePlayBuild) {
                 add(
                     SingleChoiceSetting(
                         IntSetting.UPDATE_CHECK_CHANNEL,
@@ -301,16 +302,16 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                         isEnabled = (!BuildConfig.DEBUG && BooleanSetting.CHECK_FOR_UPDATES.boolean)
                     )
                 )
-                add(
-                    SwitchSetting(
-                        BooleanSetting.ANDROID_HIDE_IMAGES,
-                        R.string.android_hide_images,
-                        R.string.android_hide_images_description,
-                        BooleanSetting.ANDROID_HIDE_IMAGES.key,
-                        BooleanSetting.ANDROID_HIDE_IMAGES.defaultValue
-                    )
-                )
             }
+            add(
+                SwitchSetting(
+                    BooleanSetting.ANDROID_HIDE_IMAGES,
+                    R.string.android_hide_images,
+                    R.string.android_hide_images_description,
+                    BooleanSetting.ANDROID_HIDE_IMAGES.key,
+                    BooleanSetting.ANDROID_HIDE_IMAGES.defaultValue
+                )
+            )
         }
     }
 
