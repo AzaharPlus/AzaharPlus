@@ -1108,6 +1108,7 @@
     <string name="multiplayer_game_name">Preferred Games</string>
     <string name="prefered_game_name">Preferred Game</string>
     <string name="multiplayer_no_game">No Games Found</string>
+    <string name="no_preference">No Preference</string>
     <string name="multiplayer_no_preferred_game">None</string>
     <string name="multiplayer_prefered_game_name_invalid">You must choose a Preferred Application to host a room.</string>
     <string name="multiplayer_default_room_name">%1$s\'s Room</string>
