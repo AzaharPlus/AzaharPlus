@@ -227,7 +227,7 @@ void NWM_UDS::HandleEAPoLPacket(const Network::WifiPacket& packet) {
 
         auto node = DeserializeNodeInfo(eapol_start.node);
 
-        if (eapol_start.connection_type == ConnectionType::Client) {
+        if (eapol_start.connection_type != ConnectionType::Spectator) {
             // Get an unused network node id
             u16 node_id = GetNextAvailableNodeId();
             node.network_node_id = node_id;
