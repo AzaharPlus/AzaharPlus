@@ -21,15 +21,17 @@ class ScreenAdjustmentUtil(
     private val windowManager: WindowManager,
     private val settings: Settings
 ) {
-    fun swapScreen() {
+    fun swapScreen(save:Boolean) {
         val isEnabled = !EmulationMenuSettings.swapScreens
         EmulationMenuSettings.swapScreens = isEnabled
         NativeLibrary.swapScreens(
             isEnabled,
             windowManager.defaultDisplay.rotation
         )
-        BooleanSetting.SWAP_SCREEN.boolean = isEnabled
-        settings.saveSetting(BooleanSetting.SWAP_SCREEN, SettingsFile.FILE_NAME_CONFIG)
+        if(save) {
+            BooleanSetting.SWAP_SCREEN.boolean = isEnabled
+            settings.saveSetting(BooleanSetting.SWAP_SCREEN, SettingsFile.FILE_NAME_CONFIG)
+        }
     }
 
     fun cycleLayouts() {

@@ -4314,7 +4314,7 @@ void GMainWindow::ToggleScreenLayout() {
 
 void GMainWindow::OnSwapScreens() {
     Settings::values.swap_screen = ui->action_Screen_Layout_Swap_Screens->isChecked();
-    system.ApplySettings();
+	system.GPU().Renderer().UpdateCurrentFramebufferLayout();
 }
 
 void GMainWindow::OnRotateScreens() {

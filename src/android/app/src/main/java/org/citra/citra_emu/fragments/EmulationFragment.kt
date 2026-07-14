@@ -369,7 +369,7 @@ class EmulationFragment :
                 }
 
                 R.id.menu_swap_screens -> {
-                    screenAdjustmentUtil.swapScreen()
+                    screenAdjustmentUtil.swapScreen(true)
                     true
                 }
 

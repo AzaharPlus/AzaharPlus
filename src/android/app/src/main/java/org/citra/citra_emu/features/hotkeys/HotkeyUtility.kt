@@ -115,7 +115,7 @@ class HotkeyUtility(
 
     fun handleHotkey(bindedButton: Int): Boolean {
         when (bindedButton) {
-            Hotkey.SWAP_SCREEN.button -> screenAdjustmentUtil.swapScreen()
+            Hotkey.SWAP_SCREEN.button -> screenAdjustmentUtil.swapScreen(false)
 
             Hotkey.CYCLE_LAYOUT.button -> screenAdjustmentUtil.cycleLayouts()
 
