@@ -6,6 +6,9 @@ Each version is the same as the corresponding version of Azahar exept for this:
 - Compatibility with older CPUs (no SSE4.2 required)
 - Compatibility with Android 9
 - ZipPass: A new way to exchange StreetPass data through zip files
+- Built in cheats
+- Amiibo generation
+- Better multiplayer compatibility with other Citra forks
 
 The Azahar logo is the property of PabloMK7 and angyartanddraw
 ---
@@ -18,22 +21,28 @@ The Azahar logo is the property of PabloMK7 and angyartanddraw
 
 # Installation
 
-### Windows / Linux
-
 Download the latest release from [Releases](https://github.com/AzaharPlus/AzaharPlus/releases).
-
----
 
 ### Android
 
-You can install the app using Obtainium:
-1. Download and install Obtainium from [here](https://github.com/ImranR98/Obtainium/releases) (use the file named `app-release.apk`)
-2. Open Obtainium and click 'Add App'
-3. Type `https://github.com/AzaharPlus/AzaharPlus` into the 'App Source URL' section
-4. Click 'Add'
-5. Click 'Install'
+The Android build is available in 2 flavors.
 
-If you wish, you can also simply install the latest APK from the [Releases](https://github.com/AzaharPlus/AzaharPlus/releases) page.
+- Replace: It has the same application id as Azahar, so it will replace it on the device.
+Its display name is "AzaharPlus" and its icon background is blue.
+Use this one if you have other apps that target Azahar, like a frontend for example.
+
+- Coexist: It has a new application id so it can coexist with Azahar without issues.
+Its display name is "+AzaharPlus+" and its icon background is red.
+
+### Cocoon
+
+The easiest way to use AzaharPlus with Cocoon is to uninstall Azahar and install the replace variant of AzaharPlus. It wiil be seen as Azahar by Cocoon.
+
+### Batocera
+
+To use AzaharPlus with Batocera you can install the Batocera Unofficial Add-ons
+
+ https://github.com/batocera-unofficial-addons/batocera-unofficial-addons
 
 # ZipPass
 
@@ -70,3 +79,7 @@ CPU: Snapdragon 835 SoC or better
 GPU: OpenGL ES 3.2 or Vulkan 1.1 support
 Memory: 2GB of RAM. 4GB is recommended
 ```
+
+# Where to find this project
+- Github: https://github.com/AzaharPlus/AzaharPlus
+- Radicle: [rad:z3A98CGFJYqHnttims4N7jYNzRoDu](https://radicle.network/nodes/rosa.radicle.network/rad%3Az3A98CGFJYqHnttims4N7jYNzRoDu)
