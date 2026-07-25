@@ -1208,6 +1208,9 @@ static std::map<std::string, std::string> amiibos = {
 	{"@1f03010004c91e03", "Bandana Waddle Dee (&& Winged Star)"},
 	{"@010d000004a70902", "Mineru's Construct"},
 	{"@1f02000004c71e03", "King Dedede (&& Tank Star)"},
+	{"@0807000004f70402", "Shiver (Splatoon Raiders)"},
+	{"@0808000004f80402", "Frye (Splatoon Raiders)"},
+	{"@0809000004f90402", "Big Man (Splatoon Raiders)"},
 };
 
 static std::map<std::string, std::string> amiibos_series = {

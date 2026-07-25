@@ -983,6 +983,9 @@ class AmiiboDatabase {
             "@1f03010004c91e03" to "Bandana Waddle Dee (& Winged Star)",
             "@010d000004a70902" to "Mineru's Construct",
             "@1f02000004c71e03" to "King Dedede (& Tank Star)",
+            "@0807000004f70402" to "Shiver (Splatoon Raiders)",
+            "@0808000004f80402" to "Frye (Splatoon Raiders)",
+            "@0809000004f90402" to "Big Man (Splatoon Raiders)",
         )
     }
 }
