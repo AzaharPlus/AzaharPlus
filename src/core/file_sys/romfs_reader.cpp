@@ -21,7 +21,7 @@ SERIALIZE_EXPORT_IMPL(FileSys::DirectRomFSReader)
 namespace FileSys {
 
 std::size_t DirectRomFSReader::ReadFile(std::size_t offset, std::size_t length, u8* buffer) {
-    length = std::min(length, static_cast<std::size_t>(data_size) - offset);
+    length = std::min(length, GetSize() - offset);
     if (length == 0)
         return 0; // Crypto++ does not like zero size buffer
 
@@ -30,7 +30,7 @@ std::size_t DirectRomFSReader::ReadFile(std::size_t offset, std::size_t length, 
 
     // Skip cache if the read is too big
     if (segments.size() == 1 && segments[0].second > cache_line_size) {
-        length = file->ReadAtBytes(buffer, length, file_offset + offset);
+        length = file->ReadAtBytes(buffer, length, offset);
         if (is_encrypted) {
             CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption d(key.data(), key.size(), ctr.data());
             d.Seek(crypto_offset + offset);
@@ -49,7 +49,7 @@ std::size_t DirectRomFSReader::ReadFile(std::size_t offset, std::size_t length, 
         auto cache_entry = cache.request(page);
         if (!cache_entry.first) {
             // If not found, read from disk and cache the data
-            read_size = file->ReadAtBytes(cache_entry.second.data(), read_size, file_offset + page);
+            read_size = file->ReadAtBytes(cache_entry.second.data(), read_size, page);
             if (is_encrypted && read_size) {
                 CryptoPP::CTR_Mode<CryptoPP::AES>::Decryption d(key.data(), key.size(), ctr.data());
                 d.Seek(crypto_offset + page);

@@ -239,6 +239,9 @@ namespace FileSys {
  */
 class NCCHContainer {
 public:
+    static std::unique_ptr<FileUtil::IOFileBase> AutoOpenNCCHNCSD(const std::string& filepath);
+    static std::unique_ptr<FileUtil::IOFileBase> AutoOpenNCCHNCSD(FileUtil::IOFileBase* file);
+
     NCCHContainer(const std::string& filepath, u32 ncch_offset = 0, u32 partition = 0);
     NCCHContainer() {}
 
@@ -351,7 +354,7 @@ public:
     }
 
     bool IsFileCompressed() {
-        return file->IsCompressed();
+        return file->GetType().HasCompressedType();
     }
 
     NCCH_Header ncch_header;
@@ -359,9 +362,6 @@ public:
     ExHeader_Header exheader_header;
 
 private:
-    std::unique_ptr<FileUtil::IOFile> Reopen(const std::unique_ptr<FileUtil::IOFile>& orig_file,
-                                             const std::string& new_filename = "");
-
     bool has_header = false;
     bool has_exheader = false;
     bool has_exefs = false;
@@ -381,13 +381,11 @@ private:
     std::array<u8, 16> exefs_ctr{};
     std::array<u8, 16> romfs_ctr{};
 
-    u32 ncch_offset = 0; // Offset to NCCH header, can be 0 for NCCHs or non-zero for CIAs/NCSDs
-    u32 exefs_offset = 0;
     u32 partition = 0;
 
     std::string filepath;
-    std::unique_ptr<FileUtil::IOFile> file;
-    std::unique_ptr<FileUtil::IOFile> exefs_file;
+    std::unique_ptr<FileUtil::IOFileBase> file;
+    std::unique_ptr<FileUtil::IOFileBase> exefs_file;
 };
 
 } // namespace FileSys
