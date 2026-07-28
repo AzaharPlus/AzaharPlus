@@ -4769,13 +4769,13 @@ Consulte o log para ver os detalhes.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="2356"/>
-        <source>Old 3DS setup</source>
-        <translation>Configuração do Old 3DS</translation>
+        <source>New 3DS setup</source>
+        <translation>Configuração do New 3DS</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="2357"/>
-        <source>New 3DS setup</source>
-        <translation>Configuração do New 3DS</translation>
+        <source>Old 3DS setup</source>
+        <translation>Configuração do Old 3DS</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="2365"/>

@@ -4768,13 +4768,13 @@ Consulta il log per i dettagli.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="2356"/>
-        <source>Old 3DS setup</source>
-        <translation>Setup Old 3DS</translation>
+        <source>New 3DS setup</source>
+        <translation>Setup New 3DS</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="2357"/>
-        <source>New 3DS setup</source>
-        <translation>Setup New 3DS</translation>
+        <source>Old 3DS setup</source>
+        <translation>Setup Old 3DS</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="2365"/>
