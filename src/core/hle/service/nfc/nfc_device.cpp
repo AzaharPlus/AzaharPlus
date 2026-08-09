@@ -63,7 +63,7 @@ static std::array<u8, 8> hexToBin(const std::string& hex) {
     return bytes;
 }
 
-static EncryptedNTAG215File getAmiibo(std::string id)
+static EncryptedNTAG215File getAmiibo(std::string id, std::string name = "+Amiibo+")
 {
 	EncryptedNTAG215File genFile = {};
 	
@@ -101,7 +101,7 @@ static EncryptedNTAG215File getAmiibo(std::string id)
     genFile.user_memory.settings.init_date.SetMonth(static_cast<u8>(11));
     genFile.user_memory.settings.init_date.SetDay(static_cast<u8>(5));
 	
-	auto amiibo_name = Common::UTF8ToUTF16("+Amiibo+");		   
+	auto amiibo_name = Common::UTF8ToUTF16(name);
 	for (int i = 0; i < amiibo_name.length(); i++) {
         genFile.user_memory.settings.amiibo_name[i] = static_cast<u16_be>(amiibo_name[i]);
     }
@@ -115,7 +115,14 @@ static EncryptedNTAG215File getAmiibo(std::string id)
 bool makeAmiiboFile(std::string id, std::string filePath)
 {
 	bool res = true;
-	EncryptedNTAG215File genFile = getAmiibo(id);
+	std::string name;
+	EncryptedNTAG215File genFile;
+	auto filepath_elems = FileUtil::SplitPathComponents(filePath);
+	
+	name = filepath_elems.back();
+	name.resize(name.length() - 4);
+	name.resize(9);
+	genFile = getAmiibo(id, name);
 
 	FileUtil::Delete(filePath);
 	FileUtil::IOFile amiibo_file(filePath, "wb");
