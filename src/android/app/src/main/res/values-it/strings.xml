@@ -1053,7 +1053,7 @@
     <string name="multiplayer_ban">Banna giocatore</string>
     <string name="multiplayer_room_browser">Stanze pubbliche</string>
     <string name="multiplayer_no_rooms_found">Nessuna stanza pubblica trovata</string>
-    <string name="multiplayer_password_required">Paasword richiesta</string>
+    <string name="multiplayer_password_required">Password richiesta</string>
     <string name="multiplayer_player_count">: %1$d/%2$d</string>
     <string name="multiplayer_game">Gioco</string>
     <string name="multiplayer_no_game_info">Qualunque gioco</string>
