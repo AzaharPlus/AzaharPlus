@@ -35,6 +35,7 @@ class AmiiboDatabase {
             "1c" to "My Mario Wooden Blocks",
             "1d" to "Street Fighter 6",
             "1e" to "Kirby Air Riders",
+            "20" to "Resident Evil",
             "21" to "Pragmata",
         )
 
@@ -986,6 +987,8 @@ class AmiiboDatabase {
             "@0807000004f70402" to "Shiver (Splatoon Raiders)",
             "@0808000004f80402" to "Frye (Splatoon Raiders)",
             "@0809000004f90402" to "Big Man (Splatoon Raiders)",
+            "@3540000005032002" to "Grace Ashcroft",
+            "@3541000005042002" to "Leon S. Kennedy",
         )
     }
 }
