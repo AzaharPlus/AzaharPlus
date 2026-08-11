@@ -87,6 +87,8 @@ static EncryptedNTAG215File getAmiibo(std::string id, std::string name = "+Amiib
 	CryptoPP::AutoSeededRandomPool rng;
 	rng.GenerateBlock((unsigned char*)&genFile.uuid, sizeof(genFile.uuid));
 	
+	genFile.uuid.uid[0] = 4;
+	
 	genFile.uuid.uid[3] = 0x88 ^ genFile.uuid.uid[0] ^ genFile.uuid.uid[1] ^ genFile.uuid.uid[2];
 	genFile.uuid.lock_bytes[0] = genFile.uuid.uid[4] ^ genFile.uuid.uid[5] ^ genFile.uuid.uid[6] ^ genFile.uuid.nintendo_id;
 	
