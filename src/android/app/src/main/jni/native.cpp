@@ -821,7 +821,9 @@ void Java_org_citra_citra_1emu_NativeLibrary_stopEmulation([[maybe_unused]] JNIE
         return;
     }
     pause_emulation = false;
-    window->StopPresenting();
+    if (window) {
+        window->StopPresenting();
+    }
     if (secondary_window) {
         secondary_window->StopPresenting();
     }
