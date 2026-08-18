@@ -41,7 +41,6 @@ import android.widget.Toast.LENGTH_LONG
 import androidx.activity.OnBackPressedCallback
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
@@ -1712,23 +1711,24 @@ class EmulationFragment :
         NativeLibrary.doFrame()
     }
 
-    private fun setInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.inGameMenu
-        ) { v: View, windowInsets: WindowInsetsCompat ->
-            val cutInsets: Insets = windowInsets.getInsets(WindowInsetsCompat.Type.displayCutout())
-            var left = 0
-            var right = 0
-            if (ViewCompat.getLayoutDirection(v) == ViewCompat.LAYOUT_DIRECTION_LTR) {
-                left = cutInsets.left
-            } else {
-                right = cutInsets.right
-            }
-
-            v.setPadding(left, cutInsets.top, right, 0)
-
+    private val applyCutoutInsets: (View, WindowInsetsCompat) -> WindowInsetsCompat = {
+            v,
             windowInsets
-        }
+        ->
+        val cutout = windowInsets.displayCutout
+        val mlp = v.layoutParams as ViewGroup.MarginLayoutParams
+        mlp.setMargins(
+            cutout?.safeInsetLeft ?: 0,
+            cutout?.safeInsetTop ?: 0,
+            cutout?.safeInsetRight ?: 0,
+            cutout?.safeInsetBottom ?: 0
+        )
+        windowInsets
+    }
+
+    private fun setInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.coordinatorLayout, applyCutoutInsets)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.inGameMenu, applyCutoutInsets)
     }
 
     private class EmulationState(private val gamePath: String) {

@@ -66,7 +66,7 @@ android {
         applicationId = "io.github.lime3ds.android"
 
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 37
         versionCode = autoVersion
         versionName = getGitVersion()
 
