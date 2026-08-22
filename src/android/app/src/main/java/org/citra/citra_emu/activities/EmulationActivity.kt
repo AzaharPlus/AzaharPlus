@@ -223,10 +223,12 @@ class EmulationActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        if(!NativeLibrary.isRunning()) {
+            NativeLibrary.resetProgramId()
+            NativeLibrary.importQueuedZipPass()
+        }
         EmulationLifecycleUtil.removeHook(onShutdown)
         NativeLibrary.playTimeManagerStop()
-        NativeLibrary.resetProgramId()
-        NativeLibrary.importQueuedZipPass()
         isEmulationRunning = false
         instance = null
         secondaryDisplayManager.releasePresentation()
