@@ -350,6 +350,8 @@ static Core::System::ResultStatus RunCitra(const std::string& filepath) {
 
     SCOPE_EXIT({ TryShutdown(); });
 
+    system.RegisterCoreLoopThreadId();
+
     // Start running emulation
     while (!stop_run) {
         if (!pause_emulation) {
