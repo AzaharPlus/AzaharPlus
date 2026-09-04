@@ -989,6 +989,7 @@ class AmiiboDatabase {
             "@0809000004f90402" to "Big Man (Splatoon Raiders)",
             "@3540000005032002" to "Grace Ashcroft",
             "@3541000005042002" to "Leon S. Kennedy",
+            "@1f04000004ca1e03" to "Chef Kawasaki (& Hop Star)",
         )
     }
 }

@@ -1213,6 +1213,7 @@ static std::map<std::string, std::string> amiibos = {
 	{"@0809000004f90402", "Big Man (Splatoon Raiders)"},
 	{"@3540000005032002", "Grace Ashcroft"},
 	{"@3541000005042002", "Leon S. Kennedy"},
+	{"@1f04000004ca1e03", "Chef Kawasaki (&& Hop Star)"},
 };
 
 static std::map<std::string, std::string> amiibos_series = {
