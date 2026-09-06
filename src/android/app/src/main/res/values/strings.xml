@@ -501,7 +501,7 @@
     <string name="loader_error_encrypted_description"><![CDATA[Azahar does not support encrypted applications. Read our <a href="https://azahar-emu.org/blog/game-loading-changes/">blog post</a> for more information.]]></string>
     <string name="loader_error_file_not_found">ROM file does not exist</string>
     <string name="no_game_present">No bootable game present!</string>
-
+    <string name="invalid_rom">Invalid ROM</string>
     <string name="loader_error_generic">An error occurred while loading ROM: \"%s (%d)\"</string>
     <string name="core_error_success">Success</string>
     <string name="core_error_not_initialized">Not initialized</string>

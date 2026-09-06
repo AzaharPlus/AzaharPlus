@@ -200,18 +200,22 @@ class GameAdapter(
             binding.imageGameScreen.scaleType = ImageView.ScaleType.CENTER_CROP
             GameIconUtils.loadGameIcon(activity, game, binding.imageGameScreen)
 
-            binding.textGameTitle.visibility = if (game.title.isEmpty()) {
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
             binding.textCompany.visibility = if (game.company.isEmpty()) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
+            binding.textGameRegion.visibility = if (game.regions.isEmpty()) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
 
-            binding.textGameTitle.text = game.title
+            binding.textGameTitle.text = if (game.fileType == "unknown") {
+                CitraApplication.appContext.getString(R.string.invalid_rom)
+            } else {
+                game.title
+            }
             binding.textCompany.text = game.company
             binding.textGameRegion.text = translateRegions(game.regions)
             binding.imageCartridge.visibility =
@@ -445,15 +449,29 @@ class GameAdapter(
 
             when (it) {
                 "Japan" -> res = R.string.japan
+
                 "North America" -> res = R.string.north_america
+
                 "Europe" -> res = R.string.europe
+
                 "Australia" -> res = R.string.australia
+
                 "China" -> res = R.string.china
+
                 "Korea" -> res = R.string.korea
+
                 "Taiwan" -> res = R.string.taiwan
+
                 "Region free" -> res = R.string.region_free
+
                 "Invalid region" -> res = R.string.invalid_region
-                else -> res = R.string.region_get_error
+
+                "" -> res = R.string.invalid_region
+
+                else -> {
+                    Log.error("[GameAdapter] Unrecognized region string \"$it\"")
+                    res = R.string.region_get_error
+                }
             }
 
             final += CitraApplication.appContext.getString(res) + "|"
