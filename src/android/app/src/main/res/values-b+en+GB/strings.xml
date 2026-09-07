@@ -99,7 +99,7 @@
     <string name="keep_current_azahar_directory">Keep Current Azahar Directory</string>
     <string name="use_prior_lime3ds_directory">Use Prior Lime3DS Directory</string>
     <string name="select">Select</string>
-    <string name="cannot_skip">You can\'t skip setting up the user folder</string>
+    <string name="cannot_skip">You cannot skip setting up the user folder</string>
     <string name="cannot_skip_directory_description">This step is required to allow Azahar to work. Please select a directory and then you can continue.</string>
     <string name="selecting_user_directory_without_write_permissions">You have lost write permissions for your <a href="https://github.com/azahar-emu/azahar/wiki/Android-User-Data-and-Storage">user data</a> directory, where saves and other information are stored. This can happen after some app or Android updates. Please re-select the directory to regain permissions so you can continue.</string>
     <string name="invalid_selection">Invalid Selection</string>
@@ -367,4 +367,708 @@
     <string name="toggle_unique_data_console_type">Toggle unique data console type</string>
     <string name="toggle_unique_data_console_type_desc">Toggles the unique data console type (Old 3DS &#8596; New 3DS) to be able to download the opposite system firmware type from system settings.</string>
     <string name="shader_jit">Enable Shader JIT</string>
-    </resources>
+    <string name="shader_jit_description">Use the JIT engine instead of the interpreter for software shader emulation.</string>
+
+  <!-- Layout settings strings -->
+    <string name="layout_screen_orientation">Screen Orientation</string>
+    <string name="layout_screen_orientation_auto_sensor">Automatic</string>
+    <string name="layout_screen_orientation_landscape">Landscape</string>
+    <string name="layout_screen_orientation_landscape_reverse">Reverse Landscape</string>
+    <string name="layout_screen_orientation_portrait">Portrait</string>
+    <string name="layout_screen_orientation_portrait_reverse">Reverse Portrait</string>
+    <string name="layouts_to_cycle">Layouts to Cycle</string>
+    <string name="layouts_to_cycle_description">Which layouts are cycled by the Cycle Layout hotkey</string>
+    <string name="aspect_ratio_default">Default</string>
+    <string name="aspect_ratio_16_9">16:9</string>
+    <string name="aspect_ratio_4_3">4:3</string>
+    <string name="aspect_ratio_21_9_fullscreen">21:9</string>
+    <string name="aspect_ratio_16_10_fullscreen_stretched">16:10</string>
+    <string name="aspect_ratio_stretch">Stretch</string>
+
+    <!-- Miscellaneous -->
+    <string name="clear">Clear</string>
+    <string name="slider_default">Default</string>
+    <string name="ini_saved">Saved settings</string>
+    <string name="gameid_saved">Saved settings for %1$s</string>
+    <string name="error_saving">Error saving %1$s.ini: %2$s</string>
+    <string name="saving">Saving…</string>
+    <string name="loading">Loading…</string>
+    <string name="next">Next</string>
+    <string name="back">Back</string>
+    <string name="learn_more">Learn More</string>
+    <string name="close">Close</string>
+    <string name="reset_to_default">Reset to Default</string>
+    <string name="option_default">Default</string>
+    <string name="none">None</string>
+    <string name="auto">Auto</string>
+    <string name="off">Off</string>
+    <string name="install">Install</string>
+    <string name="delete">Delete</string>
+    <string name="reset_all_settings">Reset All Settings?</string>
+    <string name="reset_all_settings_description">All advanced settings will be reset to their default configuration. This can not be undone.</string>
+    <string name="settings_reset">Settings reset</string>
+    <string name="select_rtc_date">Select RTC date</string>
+    <string name="select_rtc_time">Select RTC time</string>
+    <string name="reset_setting_confirmation">Do you want to reset this setting back to its default value?</string>
+    <string name="setting_not_editable">You cannot edit this now</string>
+    <string name="setting_disabled">Setting disabled</string>
+    <string name="setting_disabled_description_incompatible_setting">This setting is currently disabled due to another setting not being the appropriate value.</string>
+    <string name="setting_disabled_description_angle">The renderer cannot be changed because the device is using ANGLE for OpenGL, which is currently incompatible with Azahar. Vulkan will be used.</string>
+    <string name="setting_not_editable_description">This option cannot be changed while a game is running.</string>
+    <string name="auto_select">Auto-Select</string>
+    <string name="start">Start</string>
+    <string name="cancelling">Cancelling…</string>
+    <string name="visibility">Visibility</string>
+    <string name="information">Information</string>
+    <string name="refresh">Refresh</string>
+
+    <!-- Add Directory Screen-->
+    <string name="select_game_folder">Select Game Folder</string>
+
+    <!-- Game Properties -->
+    <string name="properties">Properties</string>
+    <string name="properties_not_loaded">The game properties could not be loaded.</string>
+
+    <!-- Preferences Screen -->
+    <string name="preferences_settings">Settings</string>
+    <string name="preferences_general">General</string>
+    <string name="preferences_system">System</string>
+    <string name="preferences_camera">Camera</string>
+    <string name="preferences_controls">Gamepad</string>
+    <string name="preferences_graphics">Graphics</string>
+    <string name="preferences_audio">Audio</string>
+    <string name="preferences_debug">Debug</string>
+    <string name="preferences_theme">Theme and Colour</string>
+    <string name="preferences_layout">Layout</string>
+
+    <!-- ROM loading errors -->
+    <string name="loader_error_generic_title">Error loading application</string>
+    <string name="loader_error_invalid_format">Invalid application format</string>
+    <string name="loader_error_invalid_format_description"><![CDATA[The application file format not supported.<br>Please make sure you are using one of the compatible file formats:<ul><li>Cartridge images: <b>.cci/.zcci/.3ds</b></li><li>Installable archives: <b>.cia/.zcia</b></li><li>Homebrew titles: <b>.3dsx/.z3dsx</b></li><li>NCCH containers: <b>.cxi/.zcxi/.app</b></li><li>ELF files: <b>.elf/.axf</b></li></ul>]]></string>
+    <string name="loader_error_invalid_system_mode">Invalid system mode</string>
+    <string name="loader_error_invalid_system_mode_description">New 3DS exclusive applications cannot be loaded without enabling the New 3DS mode.</string>
+    <string name="loader_error_applying_patches">Error applying patches</string>
+    <string name="loader_error_applying_patches_description">A generic error occurred while applying a patch to the application. Please check the log for more details.</string>
+    <string name="loader_error_patch_wrong_application">Failed to apply a patch because it is designed for a different application. Please make sure you are using the patches for the right application, region and version.</string>
+    <string name="loader_error_encrypted">Your ROM is Encrypted</string>
+    <string name="loader_error_encrypted_description"><![CDATA[Azahar does not support encrypted applications. Read our <a href=\"https://azahar-emu.org/blog/game-loading-changes/\">blog post</a> for more information.]]></string>
+    <string name="loader_error_file_not_found">ROM file does not exist</string>
+    <string name="no_game_present">No bootable game present!</string>
+    <string name="invalid_rom">Invalid ROM</string>
+    <string name="loader_error_generic">An error occurred while loading ROM: \"%s (%d)\"</string>
+    <string name="core_error_success">Success</string>
+    <string name="core_error_not_initialized">Not initialised</string>
+    <string name="core_error_get_loader">Loader for file not found, incompatible file type</string>
+    <string name="core_error_system_mode">Failed to parse file</string>
+    <string name="core_error_loader">Generic loader error</string>
+    <string name="core_error_loader_encrypted">Encrypted file</string>
+    <string name="core_error_loader_invalid_format">Corrupted file</string>
+    <string name="core_error_loader_gba_title">File is GBA title</string>
+    <string name="core_error_loader_error_patches">Error applying patches</string>
+    <string name="core_error_loader_patches_invalid_title">Patches are for a different application</string>
+    <string name="core_error_system_files">Missing system files</string>
+    <string name="core_error_savestate">Savestate failed</string>
+    <string name="core_error_artic_disconnected">Artic Base disconnected</string>
+    <string name="core_error_n3ds_application">File is New 3DS application</string>
+    <string name="core_error_core_exception_raised">Core exception raised</string>
+    <string name="core_error_savestate_build_mismatch">Savestate version mismatch</string>
+    <string name="core_error_shutdown_requested">Shutdown requested</string>
+    <string name="core_error_unknown">Unknown error</string>
+
+    <!-- Emulation Menu -->
+    <string name="emulation_menu_help">Press Back to access the menu.</string>
+    <string name="emulation_save_state">Save State</string>
+    <string name="emulation_load_state">Load State</string>
+    <string name="emulation_empty_state_slot">Slot %1$d</string>
+    <string name="emulation_occupied_state_slot">Slot %1$d - %2$tF %2$tR</string>
+    <string name="emulation_show_fps">Show FPS</string>
+    <string name="emulation_haptic_feedback">Haptic Feedback</string>
+    <string name="emulation_overlay_options">Overlay Options</string>
+    <string name="emulation_configure_controls">Configure Controls</string>
+    <string name="emulation_edit_layout">Edit Layout</string>
+    <string name="emulation_done">Done</string>
+    <string name="emulation_button_sliding">Button Sliding</string>
+    <string name="emulation_button_sliding_disabled">Hold originally pressed button</string>
+    <string name="emulation_button_sliding_enabled">Hold currently pressed button</string>
+    <string name="emulation_button_sliding_alternative">Hold original and currently pressed button</string>
+    <string name="emulation_toggle_controls">Toggle Controls</string>
+    <string name="emulation_control_scale">Adjust Scale</string>
+    <string name="emulation_control_scale_global">Global Scale</string>
+    <string name="emulation_control_scale_reset_all">Reset All</string>
+    <string name="emulation_control_opacity">Adjust Opacity</string>
+    <string name="emulation_control_joystick_rel_center">Relative Stick Centre</string>
+    <string name="emulation_control_dpad_slide_enable">D-Pad Sliding</string>
+    <string name="emulation_open_settings">Open Settings</string>
+    <string name="emulation_open_cheats">Open Cheats</string>
+    <string name="emulation_aspect_ratio">Aspect Ratio</string>
+    <string name="emulation_switch_screen_layout">Landscape Screen Layout</string>
+    <string name="emulation_switch_portrait_layout">Portrait Screen Layout</string>
+    <string name="emulation_secondary_display_enable">Enable Secondary Display</string>
+    <string name="emulation_secondary_display_enable_description">If disabled, Azahar will let Android manage connected displays. If this is enabled and multiple displays are connected, you can select which one Azahar will use from the Emulation Quick Menu</string>
+    <string name="emulation_switch_secondary_layout">Secondary Display Layout</string>
+    <string name="emulation_secondary_display_management">Secondary Display</string>
+    <string name="emulation_select_secondary_display">Choose Display</string>
+    <string name="emulation_switch_secondary_layout_description">The layout used by a connected secondary screen, wired or wireless (Chromecast, Miracast)</string>
+    <string name="emulation_screen_layout_largescreen">Large Screen</string>
+    <string name="emulation_screen_layout_portrait">Portrait</string>
+    <string name="emulation_screen_layout_single">Single Screen</string>
+    <string name="emulation_screen_layout_sidebyside">Side by Side Screens</string>
+    <string name="emulation_screen_layout_hybrid">Hybrid Screens</string>
+    <string name="emulation_screen_layout_original">Original</string>
+    <string name="emulation_portrait_layout_top_full">Default</string>
+    <string name="emulation_secondary_display_opposite">Opposite Screen</string>
+    <string name="emulation_screen_layout_custom">Custom Layout</string>
+    <string name="bg_color">Background Colour</string>
+    <string name="bg_color_description">The colour which appears behind the screens during emulation, represented as an RGB value.</string>
+    <string name="bg_red">Red</string>
+    <string name="bg_green">Green</string>
+    <string name="bg_blue">Blue</string>
+    <string name="second_screen_opacity">Custom Layout Second Screen Opacity</string>
+    <string name="second_screen_opacity_description">The opacity of the second 3DS screen when using a custom screen layout. Useful if the second screen is to be positioned on top of the first screen.</string>
+    <string name="emulation_small_screen_position">Small Screen Position</string>
+    <string name="small_screen_position_description">Where should the small screen appear relative to the large one in Large Screen Layout?</string>
+    <string name="small_screen_position_top_right">Top Right</string>
+    <string name="small_screen_position_middle_right">Centre Right</string>
+    <string name="small_screen_position_bottom_right">Bottom Right (Default)</string>
+    <string name="small_screen_position_top_left">Top Left</string>
+    <string name="small_screen_position_middle_left">Centre Left</string>
+    <string name="small_screen_position_bottom_left">Bottom Left</string>
+    <string name="small_screen_position_above">Above</string>
+    <string name="small_screen_position_below">Below</string>
+    <string name="screen_gap">Screen Gap</string>
+    <string name="screen_gap_description">Gap between screens in all two-screen modes. Measured in px relative to the 240px height of the larger screen.</string>
+    <string name="large_screen_proportion">Large Screen Proportion</string>
+    <string name="large_screen_proportion_description">How many times larger should the large screen be compared to the small screen when using the Large Screen layout?</string>
+    <string name="emulation_adjust_custom_layout">Adjust Custom Layout in Settings</string>
+    <string name="emulation_landscape_custom_layout">Landscape Custom Layout</string>
+    <string name="emulation_portrait_custom_layout">Portrait Custom Layout</string>
+    <string name="emulation_top_screen">Top Screen</string>
+    <string name="emulation_bottom_screen">Bottom Screen</string>
+    <string name="emulation_custom_layout_x">X-Position</string>
+    <string name="emulation_custom_layout_y">Y-Position</string>
+    <string name="emulation_custom_layout_width">Width</string>
+    <string name="emulation_custom_layout_height">Height</string>
+    <string name="emulation_cycle_landscape_layouts">Cycle Layouts</string>
+    <string name="emulation_swap_screens">Swap Screens</string>
+    <string name="emulation_rotate_upright">Rotate Screen Upright</string>
+    <string name="emulation_touch_overlay_reset">Reset Overlay</string>
+    <string name="emulation_show_controller_overlay">Show Controller Overlay</string>
+    <string name="emulation_close_game">Close Game</string>
+    <string name="emulation_toggle_pause">Toggle Pause</string>
+    <string name="miscellaneous">Miscellaneous</string>
+    <string name="use_artic_base_controller">Use Artic Controller when connected to Artic Base Server</string>
+    <string name="use_artic_base_controller_description">Use the controls provided by Artic Base Server when connected to it, instead of the configured input device.</string>
+    <string name="emulation_close_game_message">Are you sure that you would like to close the current game?</string>
+    <string name="menu_emulation_amiibo">Amiibo</string>
+    <string name="menu_emulation_amiibo_load">Load</string>
+    <string name="menu_emulation_amiibo_remove">Remove</string>
+    <string name="select_amiibo">Select Amiibo File</string>
+    <string name="amiibo_load_error">Error Loading Amiibo</string>
+    <string name="amiibo_load_error_message">While loading the specified Amiibo file, an error occurred. Please check that the file is correct.</string>
+    <string name="pause_emulation">Pause Emulation</string>
+    <string name="resume_emulation">Resume Emulation</string>
+    <string name="lock_drawer">Lock Drawer</string>
+    <string name="unlock_drawer">Unlock Drawer</string>
+
+    <string name="write_permission_needed">You need to allow write access to external storage for the emulator to work</string>
+    <string name="load_settings">Loading Settings…</string>
+
+    <string name="external_storage_not_mounted">The external storage needs to be available in order to use Azahar</string>
+
+    <string name="select_dir">Select This Directory</string>
+    <string name="empty_gamelist">No files were found or no game directory has been selected yet.</string>
+
+    <string name="do_not_show_this_again">Do not show this again</string>
+    <string name="searching_directory">Searching directory: %s</string>
+    <string name="move_data">Move Data</string>
+    <string name="moving_data">Moving Data…</string>
+    <string name="copy_file_name">Copy file: %s</string>
+    <string name="copy_complete">Copy Complete</string>
+    <string name="savestates">Save States</string>
+    <string name="savestate_warning_message">Warning: Savestates are NOT a replacement for in-game saves, and are not meant to be reliable.\n\nUse at your own risk!</string>
+
+    <!-- Software Keyboard -->
+    <string name="software_keyboard">Software Keyboard</string>
+    <string name="i_forgot">I Forgot</string>
+    <string name="fixed_length_required">Text length is not correct (should be %d characters)</string>
+    <string name="max_length_exceeded">Text is too long (should be no more than %d characters)</string>
+    <string name="blank_input_not_allowed">Blank input is not allowed</string>
+    <string name="empty_input_not_allowed">Empty input is not allowed</string>
+    <string name="invalid_input">Invalid input</string>
+
+    <!-- Mii Selector -->
+    <string name="mii_selector">Mii Selector</string>
+    <string name="standard_mii">Standard Mii</string>
+
+    <!-- Camera -->
+    <string name="camera_select_image">Select Image</string>
+    <string name="camera">Camera</string>
+    <string name="camera_permission_needed">Azahar needs to access your camera to emulate the 3DS\'s cameras.\n\nAlternatively, you can also set \"Image Source\" to \"Still Image\" in Camera Settings.</string>
+
+    <!-- Microphone -->
+    <string name="microphone">Microphone</string>
+    <string name="microphone_permission_needed">Azahar needs to access your microphone to emulate the 3DS\'s microphone.\n\nAlternatively, you can also change \"Audio Input Device\" in Audio Settings.</string>
+
+    <!-- Core Errors -->
+    <string name="abort_button">Abort</string>
+    <string name="continue_button">Continue</string>
+    <string name="system_archive_not_found">System Archive Not Found</string>
+    <string name="system_archive_not_found_message">%s is missing. Please dump your system archives.\nContinuing emulation may result in crashes and bugs.</string>
+    <string name="cia_file_not_found">Installation Failed. CIA file not found.</string>
+    <string name="system_archive_general">A system archive</string>
+    <string name="save_load_error">Save/Load Error</string>
+    <string name="fatal_error">Fatal Error</string>
+    <string name="fatal_error_message">A fatal error occurred. Check the log for details.\nContinuing emulation may result in crashes and bugs.</string>
+    <string name="unsupported_encrypted">Unsupported encrypted application</string>
+    <string name="invalid_system_mode">Invalid system mode</string>
+    <string name="invalid_system_mode_message">New 3DS exclusive applications cannot be loaded without enabling the New 3DS mode.</string>
+    <string name="savestate_build_mismatch_message"><![CDATA[Could not load savestate because it was created on a different Azahar version:<br/><b>Azahar %1$s</b>.<br/><br/>Please read our blog entry <a href=\"https://azahar-emu.org/blog/understanding-save-states/\">understanding savestates</a> for more information.<br/><br/>To recover your progress, downgrade to <b>Azahar %1$s</b>, load this savestate and use the application\'s built-in save functionality.]]></string>
+
+    <!-- Disk Shader Cache -->
+    <string name="preparing_shaders">Preparing Shaders</string>
+    <string name="building_shaders">Building %s</string>
+    <string name="delete_shader_cache">Delete Shader Cache</string>
+    <string name="delete_cache_select_backend">Select which graphics API to delete the shader cache</string>
+    <string name="deleting_shader_cache">Deleting shader cache for title, please wait…</string>
+    <string name="shader_cache_deleted">Shader cache deleted</string>
+
+    <!-- About Game Dialog -->
+    <string name="play">Play</string>
+    <string name="uninstall_cia">Uninstall Application</string>
+    <string name="uninstalling">Uninstalling...</string>
+    <string name="game_context_open_save_dir">Open Save Data Folder</string>
+    <string name="game_context_open_app">Open Application Folder</string>
+    <string name="game_context_open_mods">Open Mods Folder</string>
+    <string name="game_context_open_textures">Open Textures Folder</string>
+    <string name="game_context_open_dlc">Open DLC Folder</string>
+    <string name="game_context_open_updates">Open Updates Folder</string>
+    <string name="game_context_open_extra">Open Extra Folder</string>
+    <string name="game_context_uninstall_dlc">Uninstall DLC</string>
+    <string name="game_context_uninstall_updates">Uninstall Updates</string>
+    <string name="shortcut">Shortcut</string>
+    <string name="shortcut_name">Shortcut Name</string>
+    <string name="edit_icon">Edit icon</string>
+    <string name="create_shortcut">Create Shortcut</string>
+    <string name="shortcut_name_empty">Shortcut name cannot be empty</string>
+    <string name="shortcut_image_stretch_toggle">Stretch to fit image</string>
+    <string name="game_context_region">Region:</string>
+    <string name="game_context_id">ID:</string>
+    <string name="game_context_file">File:</string>
+    <string name="game_context_type">Type:</string>
+    <string name="game_context_playtime">Playtime:</string>
+    <string name="game_context_insert">Insert Cartridge</string>
+    <string name="game_context_eject">Eject Cartridge</string>
+
+    <!-- Performance Overlay settings -->
+    <string name="performance_overlay_show">Show Performance Overlay</string>
+    <string name="performance_overlay_options">Performance Overlay</string>
+    <string name="performance_overlay_enable">Enable Performance Overlay</string>
+    <string name="performance_overlay_options_description">Configure whether the performance overlay is shown and what information is displayed.</string>
+    <string name="performance_overlay_show_fps">Show FPS</string>
+    <string name="performance_overlay_show_fps_description">Display current frames per second.</string>
+    <string name="performance_overlay_show_frametime">Show Frametime</string>
+    <string name="performance_overlay_show_frametime_description">Display current frametime.</string>
+    <string name="performance_overlay_show_speed">Show Speed</string>
+    <string name="performance_overlay_show_speed_description">Display current emulation speed percentage.</string>
+    <string name="performance_overlay_show_app_ram_usage">Show App Memory Usage</string>
+    <string name="performance_overlay_show_app_ram_usage_description">Display the amount of RAM getting used by the emulator.</string>
+    <string name="performance_overlay_show_available_ram">Show Available Memory</string>
+    <string name="performance_overlay_show_available_ram_description">Display the amount of RAM which is available.</string>
+    <string name="performance_overlay_show_battery_temp">Show Battery Temperature</string>
+    <string name="performance_overlay_show_battery_temp_description">Display current Battery temperature in Celsius and Fahrenheit.</string>
+    <string name="performance_overlay_position">Overlay Position</string>
+    <string name="performance_overlay_position_description">Choose where the performance overlay is displayed on the screen.</string>
+    <string name="performance_overlay_position_top_left">Top Left</string>
+    <string name="performance_overlay_position_top_right">Top Right</string>
+    <string name="performance_overlay_position_bottom_left">Bottom Left</string>
+    <string name="performance_overlay_position_bottom_right">Bottom Right</string>
+    <string name="performance_overlay_position_center_top">Centre Top</string>
+    <string name="performance_overlay_position_center_bottom">Centre Bottom</string>
+    <string name="performance_overlay_background">Overlay Background</string>
+    <string name="performance_overlay_background_description">Adds a background behind the overlay for easier reading.</string>
+
+    <!-- Cheats -->
+    <string name="cheats">Cheats</string>
+    <string name="cheats_add">Add Cheat</string>
+    <string name="cheats_name">Name</string>
+    <string name="cheats_notes">Notes</string>
+    <string name="cheats_code">Code</string>
+    <string name="cheats_edit">Edit</string>
+    <string name="cheats_delete">Delete</string>
+    <string name="cheats_delete_confirmation">Are you sure you want to delete \"%1$s\"?</string>
+    <string name="cheats_error_no_name">Name cannot be empty</string>
+    <string name="cheats_error_no_code_lines">Code cannot be empty</string>
+    <string name="cheats_error_on_line">Error on line %1$d</string>
+
+    <!-- CIA Install -->
+    <plurals name="cia_install_toast">
+        <item quantity="one">Installing %d file. See notification for more details.</item>
+        <item quantity="other">Installing %d files. See notification for more details.</item>
+    </plurals>
+    <string name="cia_install_notification_channel_description">Azahar notifications during CIA Install</string>
+    <string name="cia_install_notification_title">Installing CIA</string>
+    <string name="cia_install_notification_installing">Installing %1$s (%2$d/%3$d)</string>
+    <string name="cia_install_notification_success_title">Successfully installed CIA</string>
+    <string name="cia_install_notification_error_title">Failed to install CIA</string>
+    <string name="cia_install_success">\"%s\" has been installed successfully</string>
+    <string name="cia_install_error_aborted">The installation of \"%s\" was aborted.\n Please see the log for more details</string>
+    <string name="cia_install_error_invalid">\"%s\" is not a valid CIA</string>
+    <string name="cia_install_error_encrypted">\"%s\" must be decrypted before being used with Azahar.\n A real 3DS is required</string>
+    <string name="cia_install_error_unknown">An unknown error occurred while installing \"%s\".\n Please see the log for more details</string>
+
+    <string name="memory_byte">Byte</string>
+    <string name="memory_byte_shorthand">B</string>
+    <string name="memory_kilobyte">KB</string>
+    <string name="memory_megabyte">MB</string>
+    <string name="memory_gigabyte">GB</string>
+    <string name="memory_terabyte">TB</string>
+    <string name="memory_petabyte">PB</string>
+    <string name="memory_exabyte">EB</string>
+
+    <!-- System theme -->
+    <string name="change_theme_mode">Theme Mode</string>
+    <string name="theme_mode_follow_system">Follow System</string>
+    <string name="theme_mode_light">Light</string>
+    <string name="theme_mode_dark">Dark</string>
+
+    <!-- Material You theme -->
+    <string name="material_you">Material You</string>
+    <string name="material_you_description">Use the operating system\'s colour theme across the app (Overrides the \"Theme Colour\" setting when enabled)</string>
+
+    <!-- Static theme color -->
+    <string name="static_theme_color">Theme Colour</string>
+    <string name="static_theme_color_description">Change the colour theme of the app\'s menus</string>
+
+    <!-- Black backgrounds theme -->
+    <string name="use_black_backgrounds">Black Backgrounds</string>
+    <string name="use_black_backgrounds_description">When using the dark theme, apply black backgrounds.</string>
+
+    <!-- Language names -->
+    <string name="language_japanese">Japanese (日本語)</string>
+    <string name="language_english">English</string>
+    <string name="language_french">French (Français)</string>
+    <string name="language_german">German (Deutsch)</string>
+    <string name="language_italian">Italian (Italiano)</string>
+    <string name="language_spanish">Spanish (Español)</string>
+    <string name="language_simplified_chinese">Simplified Chinese (简体中文)</string>
+    <string name="language_korean">Korean (한국어)</string>
+    <string name="language_dutch">Dutch (Nederlands)</string>
+    <string name="language_portuguese">Portuguese (Português)</string>
+    <string name="language_russian">Russian (Русский)</string>
+    <string name="language_traditional_chinese">Traditional Chinese (正體中文)</string>
+
+    <!-- Camera image sources -->
+    <string name="blank">Blank</string>
+    <string name="still_image">Still Image</string>
+    <string name="device_camera">Device Camera</string>
+
+    <!-- Camera device names -->
+    <string name="any_front_camera">Any Front Camera</string>
+    <string name="any_back_camera">Any Back Camera</string>
+
+    <!-- Camera flip names -->
+    <string name="horizontal">Horizontal</string>
+    <string name="vertical">Vertical</string>
+    <string name="reverse">Reverse</string>
+
+    <!-- Audio input types -->
+    <string name="static_noise">Static Noise</string>
+    <string name="real_cubeb">Real Device (cubeb)</string>
+    <string name="real_openal">Real Device (OpenAL)</string>
+
+    <!-- Render 3D modes -->
+    <string name="side_by_side">Side by Side</string>
+    <string name="side_by_side_full">Side by Side Full Width</string>
+    <string name="anaglyph">Anaglyph</string>
+    <string name="interlaced">Interlaced</string>
+    <string name="reverse_interlaced">Reverse Interlaced</string>
+
+    <!-- Texture Sampling names -->
+    <string name="game_controlled">Game Controlled</string>
+    <string name="nearest_neighbor">Nearest Neighbor</string>
+    <string name="linear">Linear</string>
+
+    <!-- Sound output modes -->
+    <string name="mono">Mono</string>
+    <string name="stereo">Stereo</string>
+    <string name="surround">Surround</string>
+
+    <!-- Countries -->
+    <string name="japan">Japan</string>
+    <string name="anguilla">Anguilla</string>
+    <string name="antigua_and_barbuda">Antigua and Barbuda</string>
+    <string name="argentina">Argentina</string>
+    <string name="aruba">Aruba</string>
+    <string name="bahamas">Bahamas</string>
+    <string name="barbados">Barbados</string>
+    <string name="belize">Belize</string>
+    <string name="bolivia">Bolivia</string>
+    <string name="brazil">Brazil</string>
+    <string name="british_virgin_islands">British Virgin Islands</string>
+    <string name="canada">Canada</string>
+    <string name="cayman_islands">Cayman Islands</string>
+    <string name="chile">Chile</string>
+    <string name="colombia">Colombia</string>
+    <string name="costa_rica">Costa Rica</string>
+    <string name="dominica">Dominica</string>
+    <string name="dominican_republic">Dominican Republic</string>
+    <string name="ecuador">Ecuador</string>
+    <string name="el_salvador">El Salvador</string>
+    <string name="french_guiana">French Guiana</string>
+    <string name="grenada">Grenada</string>
+    <string name="guadeloupe">Guadeloupe</string>
+    <string name="guatemala">Guatemala</string>
+    <string name="guyana">Guyana</string>
+    <string name="haiti">Haiti</string>
+    <string name="honduras">Honduras</string>
+    <string name="jamaica">Jamaica</string>
+    <string name="matinique">Martinique</string>
+    <string name="mexico">Mexico</string>
+    <string name="monsterrat">Montserrat</string>
+    <string name="netherlands_antilles">Netherlands Antilles</string>
+    <string name="nicaragua">Nicaragua</string>
+    <string name="panama">Panama</string>
+    <string name="paraguay">Paraguay</string>
+    <string name="peru">Peru</string>
+    <string name="saint_kittis_and_nevis">Saint Kitts and Nevis</string>
+    <string name="saint_lucia">Saint Lucia</string>
+    <string name="saint_vincent_and_the_grenadines">Saint Vincent and the Grenadines</string>
+    <string name="suriname">Suriname</string>
+    <string name="trinidad_and_tobago">Trinidad and Tobago</string>
+    <string name="turks_and_caicos_islands">Turks and Caicos Islands</string>
+    <string name="united_states">United States</string>
+    <string name="uruguay">Uruguay</string>
+    <string name="us_virgin_islands">US Virgin Islands</string>
+    <string name="venezuela">Venezuela</string>
+    <string name="albania">Albania</string>
+    <string name="australia">Australia</string>
+    <string name="austria">Austria</string>
+    <string name="belgium">Belgium</string>
+    <string name="bosnia_and_herzegovnia">Bosnia and Herzegovina</string>
+    <string name="botswana">Botswana</string>
+    <string name="bulgaria">Bulgaria</string>
+    <string name="croatia">Croatia</string>
+    <string name="cyprus">Cyprus</string>
+    <string name="czech_republic">Czech Republic</string>
+    <string name="denmark">Denmark</string>
+    <string name="estonia">Estonia</string>
+    <string name="finland">Finland</string>
+    <string name="france">France</string>
+    <string name="germany">Germany</string>
+    <string name="greece">Greece</string>
+    <string name="hungary">Hungary</string>
+    <string name="iceland">Iceland</string>
+    <string name="ireland">Ireland</string>
+    <string name="italy">Italy</string>
+    <string name="latvia">Latvia</string>
+    <string name="lesotho">Lesotho</string>
+    <string name="liechtenstein">Liechtenstein</string>
+    <string name="lithuania">Lithuania</string>
+    <string name="luxembourg">Luxembourg</string>
+    <string name="macedonia">Macedonia</string>
+    <string name="malta">Malta</string>
+    <string name="montenegro">Montenegro</string>
+    <string name="mozambique">Mozambique</string>
+    <string name="namibia">Namibia</string>
+    <string name="netherlands">Netherlands</string>
+    <string name="new_zealand">New Zealand</string>
+    <string name="norway">Norway</string>
+    <string name="poland">Poland</string>
+    <string name="portugal">Portugal</string>
+    <string name="romania">Romania</string>
+    <string name="russia">Russia</string>
+    <string name="serbia">Serbia</string>
+    <string name="slovakia">Slovakia</string>
+    <string name="slovenia">Slovenia</string>
+    <string name="south_africa">South Africa</string>
+    <string name="spain">Spain</string>
+    <string name="swaziland">Swaziland</string>
+    <string name="sweden">Sweden</string>
+    <string name="switzerland">Switzerland</string>
+    <string name="turkey">Turkey</string>
+    <string name="united_kingdom">United Kingdom</string>
+    <string name="zambia">Zambia</string>
+    <string name="zimbabwe">Zimbabwe</string>
+    <string name="azerbaijan">Azerbaijan</string>
+    <string name="mauritania">Mauritania</string>
+    <string name="mali">Mali</string>
+    <string name="niger">Niger</string>
+    <string name="chad">Chad</string>
+    <string name="sudan">Sudan</string>
+    <string name="eritrea">Eritrea</string>
+    <string name="djibouti">Djibouti</string>
+    <string name="somalia">Somalia</string>
+    <string name="andorra">Andorra</string>
+    <string name="gibraltar">Gibraltar</string>
+    <string name="guernsey">Guernsey</string>
+    <string name="isle_of_man">Isle of Man</string>
+    <string name="jersey">Jersey</string>
+    <string name="monaco">Monaco</string>
+    <string name="taiwan">Taiwan</string>
+    <string name="south_korea">South Korea</string>
+    <string name="hong_kong">Hong Kong</string>
+    <string name="macau">Macau</string>
+    <string name="indonesia">Indonesia</string>
+    <string name="singapore">Singapore</string>
+    <string name="thailand">Thailand</string>
+    <string name="philippines">Philippines</string>
+    <string name="malaysia">Malaysia</string>
+    <string name="china">China</string>
+    <string name="united_arab_emirates">United Arab Emirates</string>
+    <string name="india">India</string>
+    <string name="egypt">Egypt</string>
+    <string name="oman">Oman</string>
+    <string name="qatar">Qatar</string>
+    <string name="kuwait">Kuwait</string>
+    <string name="saudi_arabia">Saudi Arabia</string>
+    <string name="syria">Syria</string>
+    <string name="bahrain">Bahrain</string>
+    <string name="jordan">Jordan</string>
+    <string name="san_marino">San Marino</string>
+    <string name="vatican_city">Vatican City</string>
+    <string name="bermuda">Bermuda</string>
+
+    <!-- Regions (Japan, Australia, China and Taiwan are above) -->
+    <string name="north_america">North America</string>
+    <string name="europe">Europe</string>
+    <string name="korea">Korea</string>
+    <string name="region_free">Region free</string>
+    <string name="invalid_region">Invalid region</string>
+    <string name="region_get_error">ERROR PLEASE REPORT</string>
+
+    <!-- Months -->
+    <string name="january">January</string>
+    <string name="february">February</string>
+    <string name="march">March</string>
+    <string name="april">April</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="july">July</string>
+    <string name="august">August</string>
+    <string name="september">September</string>
+    <string name="october">October</string>
+    <string name="november">November</string>
+    <string name="december">December</string>
+
+    <!-- Artic base -->
+    <string name="artic_server_comm_error">Failed to communicate with the Artic Base server. Emulation will stop.</string>
+    <string name="artic_base">Artic Base</string>
+    <string name="artic_base_connect_description">Connect to a real console that is running an Artic Base server</string>
+    <string name="artic_base_connect">Connect to Artic Base</string>
+    <string name="artic_base_enter_address">Enter Artic Base server address</string>
+
+    <!-- Quickload&Save-->
+    <string name="emulation_quicksave_slot">Quicksave</string>
+    <string name="emulation_quicksave">Quicksave</string>
+    <string name="emulation_quickload">Quickload</string>
+    <string name="emulation_occupied_quicksave_slot">Quicksave - %1$tF %1$tR</string>
+    <string name="quickload_not_found">No Quicksave available.</string>
+
+    <!-- File Compression -->
+    <string name="compress">Compress</string>
+    <string name="compressing">Compressing…</string>
+    <string name="decompress">Decompress</string>
+    <string name="decompressing">Decompressing…</string>
+    <string name="compress_success">Compression completed successfully.</string>
+    <string name="compress_unsupported">Compression not supported for this file.</string>
+    <string name="compress_already">File is already compressed.</string>
+    <string name="compress_failed">Compression failed.</string>
+    <string name="decompress_success">Decompression completed successfully.</string>
+    <string name="decompress_unsupported">Decompression not supported for this file.</string>
+    <string name="decompress_not_compressed">File is not compressed.</string>
+    <string name="decompress_failed">Decompression failed.</string>
+    <string name="compress_decompress_installed_app">Already installed applications cannot be compressed or decompressed.</string>
+
+  <!-- Multiplayer -->
+    <string name="multiplayer">Multiplayer</string>
+    <string name="multiplayer_description">Host your own game room or join an existing one to play with people</string>
+    <string name="multiplayer_room_title">Room: %1$s</string>
+    <string name="multiplayer_console_id">Console ID：%1$s</string>
+    <string name="multiplayer_create_room">Create</string>
+    <string name="multiplayer_join_room">Join</string>
+    <string name="multiplayer_public_room">Browse Public Rooms</string>
+    <string name="multiplayer_username">Username</string>
+    <string name="multiplayer_ip_address">IP Address</string>
+    <string name="multiplayer_ip_port">Port</string>
+    <string name="multiplayer_create_room_success">Room created successfully!</string>
+    <string name="multiplayer_join_room_success">Joined the room successfully!</string>
+    <string name="multiplayer_create_room_failed">Failed to create room!</string>
+    <string name="multiplayer_join_room_failed">Failed to join room!</string>
+    <string name="multiplayer_input_invalid">Invalid address or name is too short!</string>
+    <string name="multiplayer_port_invalid">Invalid port!</string>
+    <string name="multiplayer_exit_room">Exit Room</string>
+    <string name="multiplayer_network_error">Network error</string>
+    <string name="multiplayer_lost_connection">Lost connection</string>
+    <string name="multiplayer_name_collision">Name collision</string>
+    <string name="multiplayer_mac_collision">Mac collision</string>
+    <string name="multiplayer_console_id_collision">Console ID collision</string>
+    <string name="multiplayer_wrong_version">Wrong version</string>
+    <string name="multiplayer_wrong_password">Wrong password</string>
+    <string name="multiplayer_could_not_connect">Could not connect</string>
+    <string name="multiplayer_room_is_full">Room is full</string>
+    <string name="multiplayer_host_banned">Host banned</string>
+    <string name="multiplayer_permission_denied">Permission denied</string>
+    <string name="multiplayer_no_such_user">No such user</string>
+    <string name="multiplayer_already_in_room">Already in room</string>
+    <string name="multiplayer_create_room_error">Create room error</string>
+    <string name="multiplayer_host_kicked">Host kicked</string>
+    <string name="multiplayer_unknown_error">unknown error</string>
+    <string name="multiplayer_room_uninitialized">Room uninitialised</string>
+    <string name="multiplayer_room_idle">Room idle</string>
+    <string name="multiplayer_room_joining">Room joining</string>
+    <string name="multiplayer_room_joined">Room joined</string>
+    <string name="multiplayer_room_moderator">Room moderator</string>
+    <string name="multiplayer_member_join">%1$s joined</string>
+    <string name="multiplayer_member_leave">%1$s left</string>
+    <string name="multiplayer_member_kicked">%1$s kicked</string>
+    <string name="multiplayer_member_banned">%1$s banned</string>
+    <string name="multiplayer_address_unbanned">address unbanned</string>
+    <string name="multiplayer_kick_member">Kick Out</string>
+    <string name="multiplayer_chat_input_hint">Send messages……</string>
+    <string name="multiplayer_password">Password</string>
+    <string name="original_button_text">Join</string>
+    <string name="disabled_button_text">Joining...</string>
+    <string name="multiplayer_room_name">Room Name</string>
+    <string name="multiplayer_room_name_invalid">Room name must be between 3 and 20 characters</string>
+    <string name="multiplayer_max_players">Max Players (16)</string>
+    <string name="multiplayer_max_players_value">Max Players: %d</string>
+    <string name="multiplayer_chat">Chat</string>
+    <string name="multiplayer_more_options">More Options</string>
+    <string name="multiplayer_ip_copied">IP Address copied to clipboard</string>
+    <string name="multiplayer_server_address">Server Address</string>
+    <string name="chat">Chat</string>
+    <string name="type_message">Type message……</string>
+    <string name="send">Send</string>
+    <string name="send_message">Send Message</string>
+    <string name="multiplayer_moderation">Moderation</string>
+    <string name="multiplayer_moderation_title">Ban List</string>
+    <string name="multiplayer_no_bans">No banned users</string>
+    <string name="multiplayer_unban_title">Unban User</string>
+    <string name="multiplayer_unban">Unban</string>
+    <string name="multiplayer_unban_message">Are you sure you want to unban %1$s?</string>
+    <string name="multiplayer_ban">Ban User</string>
+    <string name="multiplayer_room_browser">Public Rooms</string>
+    <string name="multiplayer_no_rooms_found">No public rooms found</string>
+    <string name="multiplayer_password_required">Password Required</string>
+    <string name="multiplayer_game">Game</string>
+    <string name="multiplayer_no_game_info">Any Game</string>
+    <string name="multiplayer_password_protected">Password protected room</string>
+    <string name="multiplayer_hide_full_rooms">Hide Full Rooms</string>
+    <string name="multiplayer_hide_empty_rooms">Hide Empty Rooms</string>
+    <string name="multiplayer_tap_refresh_to_check_again">Tap refresh to check again</string>
+    <string name="multiplayer_search_public_lobbies">Search Public Lobbies...</string>
+    <string name="multiplayer_game_name">Preferred Games</string>
+    <string name="prefered_game_name">Preferred Game</string>
+    <string name="multiplayer_no_game">No Games Found</string>
+    <string name="no_preference">No Preference</string>
+
+    <string name="update_available">Update Available</string>
+    <string name="update_available_description">A newer version of Azahar is available (version %1$s).\nWould you like to download it?</string>
+    <string name="check_for_updates">Check For Updates</string>
+    <string name="check_for_updates_description">Display an in-app notification when an update is available for Azahar.</string>
+    <string name="update_check_channel">Update Channel</string>
+    <string name="update_check_channel_description">Which update channel to use when checking for updates.</string>
+    <string name="update_check_channel_stable">Stable</string>
+    <string name="update_check_channel_prerelease">Prerelease</string>
+
+</resources>

@@ -2965,8 +2965,8 @@ installed applications.</source>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_system.ui" line="772"/>
-        <source>System settings are available only when applications is not running.</source>
-        <translation>Les paramètres du système ne sont disponibles que lorsque les applications ne sont pas en cours d&apos;exécution.</translation>
+        <source>System settings are unavailable when a 3DS application is running.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_system.cpp" line="41"/>
@@ -5484,7 +5484,7 @@ de démarrage.</translation>
     <message>
         <location filename="../../src/citra_qt/game_list_p.h" line="100"/>
         <source>North America</source>
-        <translation>Amérique du nord</translation>
+        <translation>Amérique du Nord</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/game_list_p.h" line="101"/>

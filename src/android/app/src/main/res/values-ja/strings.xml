@@ -40,11 +40,14 @@
     <string name="welcome">ようこそ！</string>
     <string name="games">アプリケーション</string>
     <string name="filesystem_permission">ファイルシステム</string>
+    <string name="permissions">権限</string>
     <string name="warning_help">ヘルプ</string>
     <string name="warning_skip">スキップ</string>
     <string name="warning_cancel">キャンセル</string>
     <string name="select_citra_user_folder">ユーザーフォルダーを選択</string>
     <string name="set_up_theme_settings">テーマ設定</string>
+    <string name="search_installed">インストール済み</string>
+
     <string name="controller_circlepad">スライドパッド</string>
     <string name="controller_c">Cスティック</string>
     <string name="controller_dpad">十字ボタン</string>
@@ -73,6 +76,8 @@
     <string name="enable_required_online_lle_modules">オンラインに必要なLLEモジュールを有効にする（インストール済みの場合）</string>
     <string name="enable_required_online_lle_modules_desc">eShopやオンラインマルチプレイヤーなどに必要なLLEモジュールを有効にします。</string>
     <string name="profile_settings">プロファイル設定</string>
+    <string name="birthday_month">月</string>
+    <string name="birthday_day">日</string>
     <string name="mac_address">MACアドレス</string>
     <string name="regenerate_mac_address">MACアドレスを再生成</string>
     <string name="regenerate_mac_address_description">これを行うと、今のMACアドレスを新しいもので置き換えます。セットアップツールで実機からMACアドレスを吸い出した場合、これをするのは推奨しません。続行しますか？</string>
@@ -120,6 +125,7 @@
     <string name="off">オフ</string>
     <string name="install">インストール</string>
     <string name="delete">削除</string>
+    <string name="cancelling">キャンセル中…</string>
     <string name="loader_error_encrypted">ROMは暗号化されている</string>
     <string name="loader_error_file_not_found">ROMファイルがありません</string>
     <string name="core_error_loader_encrypted">暗号化されたファイル</string>
@@ -251,6 +257,11 @@
     <string name="guernsey">ガーンジー</string>
     <string name="isle_of_man">マン島</string>
     <string name="jersey">ジャージー</string>
+    <string name="china">中国</string>
+    <!-- Regions (Japan, Australia, China and Taiwan are above) -->
+    <string name="north_america">北米</string>
+    <string name="europe">ヨーロッパ</string>
+    <string name="korea">韓国</string>
     <!-- Months -->
     <string name="january">1月</string>
     <string name="february">2月</string>
@@ -285,4 +296,5 @@
     <string name="multiplayer_room_moderator">ルームのモデレーター</string>
     <string name="multiplayer_room_name">ルーム名</string>
     <string name="update_available"> アップデートがあります</string>
+    <string name="update_check_channel">アップデートチャネル</string>
     </resources>

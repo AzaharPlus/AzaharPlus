@@ -846,12 +846,12 @@ Would you like to ignore the error and continue?</translation>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_debug.ui" line="316"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables the exception handler. When an exception occurs a detailed crash report will be shown.&lt;/p&gt;&lt;p&gt;Note: When using CPU JIT, register values in the crash report may not be fully accurate because the JIT may have advanced past the fault. For more accurate reports, consider disabling CPU JIT.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables the exception handler. When an exception occurs, a detailed crash report will be shown.&lt;/p&gt;&lt;p&gt;Note: When using CPU JIT, register values in the crash report may not be entirely accurate because the JIT may have advanced past the fault. For more accurate reports, consider disabling CPU JIT.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_debug.ui" line="319"/>
         <source>Enable exception handler</source>
-        <translation type="unfinished"></translation>
+        <translation>Enable exception handler</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_debug.cpp" line="60"/>
@@ -2102,7 +2102,7 @@ Would you like to ignore the error and continue?</translation>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_layout.ui" line="327"/>
         <source>Background Color</source>
-        <translation>Background Color</translation>
+        <translation>Background Colour</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_layout.ui" line="364"/>
@@ -2965,8 +2965,8 @@ installed applications.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_system.ui" line="772"/>
-        <source>System settings are available only when applications is not running.</source>
-        <translation>System settings are available only when applications is not running.</translation>
+        <source>System settings are unavailable when a 3DS application is running.</source>
+        <translation>System settings are unavailable when a 3DS application is running.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_system.cpp" line="41"/>
@@ -4908,22 +4908,22 @@ To view a guide on how to install FFmpeg, press Help.</translation>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="3871"/>
         <source>An exception occurred while executing the emulated application.</source>
-        <translation type="unfinished"></translation>
+        <translation>An exception occurred while executing the emulated application.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="3872"/>
         <source>An invalid memory access occurred while executing the emulated application.</source>
-        <translation type="unfinished"></translation>
+        <translation>An invalid memory access occurred while executing the emulated application.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="3888"/>
         <source>Ignore for this Session</source>
-        <translation type="unfinished"></translation>
+        <translation>Ignore for this Session</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="3900"/>
         <source>Stop Emulation</source>
-        <translation type="unfinished"></translation>
+        <translation>Stop Emulation</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/citra_qt.cpp" line="3934"/>
@@ -5556,7 +5556,7 @@ Screen.</translation>
     <message>
         <location filename="../../src/citra_qt/debugger/graphics/graphics_surface.cpp" line="60"/>
         <source>Color Buffer</source>
-        <translation>Color Buffer</translation>
+        <translation>Colour Buffer</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/debugger/graphics/graphics_surface.cpp" line="61"/>

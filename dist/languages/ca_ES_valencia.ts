@@ -2963,8 +2963,8 @@ a les aplicacions instal·lades.</translation>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_system.ui" line="772"/>
-        <source>System settings are available only when applications is not running.</source>
-        <translation>La configuració del sistema només està disponible quan l&apos;aplicació no s&apos;està executant.</translation>
+        <source>System settings are unavailable when a 3DS application is running.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/citra_qt/configuration/configure_system.cpp" line="41"/>

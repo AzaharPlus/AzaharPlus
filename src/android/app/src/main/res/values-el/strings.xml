@@ -188,8 +188,6 @@
     <string name="cheats_edit">Επεξεργασία</string>
     <string name="cheats_delete">Διαγραφή</string>
     <string name="cia_install_notification_title">Εγκατάσταση CIA</string>
-    <!-- Memory Sizes -->
-    <string name="memory_formatted">%1$s %2$s</string>
     <string name="memory_byte">Byte</string>
     <string name="memory_byte_shorthand">B</string>
     <string name="memory_kilobyte">KB</string>
@@ -217,15 +215,6 @@
     <string name="language_traditional_chinese">Παραδοσιακά Κινεζικά (正體中文)</string>
 
     <string name="device_camera">Κάμερα συσκευής</string>
-
-    <!-- Graphics API names -->
-    <string name="opengles">OpenGLES</string>
-    <string name="vulkan">Vulkan</string>
-
-    <!-- Texture filter names -->
-    <string name="anime4k">Anime4K</string>
-    <string name="xbrz">xBRZ</string>
-    <string name="mmpx">MMPX</string>
 
     <!-- Countries -->
     <string name="japan">Ιαπωνία</string>
