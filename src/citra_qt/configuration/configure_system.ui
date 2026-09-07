@@ -769,7 +769,7 @@ installed applications.</string>
          <item>
           <widget class="QLabel" name="label_disable_info">
            <property name="text">
-            <string>System settings are available only when applications is not running.</string>
+            <string>System settings are unavailable when a 3DS application is running.</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
