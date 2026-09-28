@@ -176,4 +176,8 @@ if (BACKTRACE_LIBRARY AND ${CMAKE_SYSTEM_NAME} STREQUAL "Linux" AND CMAKE_CXX_CO
     target_compile_definitions(citra_common PRIVATE CITRA_LINUX_GCC_BACKTRACE)
 endif()
 
-target_link_libraries(citra_common PUBLIC xxHash::xxhash)
+if (USE_SYSTEM_XXHASH)
+    target_link_libraries(citra_common PUBLIC xxhash)
+else()
+    target_link_libraries(citra_common PUBLIC xxHash::xxhash)
+endif()
