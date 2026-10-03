@@ -36,7 +36,7 @@
     <string name="select_games_folder_description">Allows Azahar to populate the application list</string>
     <string name="about">About</string>
     <string name="clear_streetpass_config">Clear StreetPass Configuration</string>
-    <string name="citra_description">An open-source 3DS emulator</string>
+    <string name="citra_description">An open-source 3DS emulator\nLicensed under GPLv3 or any later version</string>
     <string name="about_description">Build version, credits, and more</string>
     <string name="clear_streetpass_config_description">In case something went wrong with ZipPass</string>
     <string name="games_dir_selected">Application directory selected</string>
